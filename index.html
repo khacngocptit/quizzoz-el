@@ -121,7 +121,7 @@
             font-weight: 600;
         }
         
-        .options-grid {
+        #optionsContainer {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
@@ -129,7 +129,7 @@
         }
         
         @media (max-width: 768px) {
-            .options-grid {
+            #optionsContainer {
                 grid-template-columns: 1fr;
             }
         }
@@ -143,7 +143,8 @@
             border: 2px solid transparent;
             white-space: pre-wrap;
             line-height: 1.5;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            margin: 0;
         }
         
         .option:hover:not(.disabled) {
@@ -461,7 +462,6 @@
 
             const container = document.getElementById('optionsContainer');
             container.innerHTML = '';
-            container.className = 'options-grid';
 
             question.options.forEach((option, index) => {
                 const div = document.createElement('div');
