@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm Online</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .upload-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .upload-box {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9ff;
+        }
+        
+        .upload-box:hover {
+            background: #e8eaf6;
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+        
+        .upload-box.dragover {
+            background: #e8eaf6;
+            border-color: #764ba2;
+        }
+        
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            color: #667eea;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .file-name {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .progress {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-box {
+            margin-bottom: 30px;
+        }
+        
+        .question-number {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        
+        .option:hover:not(.disabled) {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #e8eaf6;
+        }
+        
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-box {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .result-score {
+            font-size: 4em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .result-text {
+            font-size: 1.5em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .start-screen h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .start-screen p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Trắc Nghiệm Online</h1>
+        
+        <div id="uploadSection" class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Chọn hoặc kéo thả file Excel vào đây</div>
+                <div class="upload-hint">Hỗ trợ file .xlsx, .xls</div>
+                <input type="file" id="fileInput" accept=".xlsx,.xls">
+            </div>
+            <div id="fileName" class="file-name hidden"></div>
+            <div id="errorMessage" class="error hidden"></div>
+        </div>
+        
+        <div id="startSection" class="start-screen hidden">
+            <h2>Sẵn sàng bắt đầu!</h2>
+            <p>Bài trắc nghiệm có <strong id="totalQuestions"></strong> câu hỏi.<br>
+            Câu hỏi và đáp án sẽ được đảo ngẫu nhiên.<br>
+            Chúc bạn làm bài tốt!</p>
+            <button class="btn" onclick="startQuiz()">Bắt đầu làm bài</button>
+            <button class="btn btn-secondary" onclick="resetUpload()">Chọn file khác</button>
+        </div>
+        
+        <div id="quizSection" class="hidden">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="question-box">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                <div id="optionsContainer"></div>
+                <div id="feedback" class="feedback hidden"></div>
+            </div>
+            
+            <button id="nextBtn" class="btn" disabled>Câu tiếp theo →</button>
+        </div>
+        
+        <div id="resultSection" class="hidden">
+            <div class="result-box">
+                <h2>🎉 Hoàn thành!</h2>
+                <div class="result-score" id="resultScore"></div>
+                <div class="result-text" id="resultText"></div>
+                <button class="btn" onclick="restartQuiz()">Làm lại</button>
+                <button class="btn btn-secondary" onclick="resetAll()">Upload file mới</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let selectedAnswer = null;
+
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Click to upload
+        uploadBox.addEventListener('click', () => fileInput.click());
+
+        // File input change
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.classList.add('dragover');
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.classList.remove('dragover');
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect({ target: { files: files } });
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Check file type
+            if (!file.name.match(/\.(xlsx|xls)$/)) {
+                showError('Vui lòng chọn file Excel (.xlsx hoặc .xls)');
+                return;
+            }
+
+            fileName.textContent = `✓ Đã chọn: ${file.name}`;
+            fileName.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                    if (jsonData.length === 0) {
+                        showError('File không có dữ liệu!');
+                        return;
+                    }
+
+                    processQuestions(jsonData);
+                    document.getElementById('uploadSection').classList.add('hidden');
+                    document.getElementById('startSection').classList.remove('hidden');
+                    document.getElementById('totalQuestions').textContent = questions.length;
+                } catch (error) {
+                    showError('Không thể đọc file! Vui lòng kiểm tra định dạng file.');
+                    console.error('Error:', error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = '⚠️ ' + message;
+            errorMessage.classList.remove('hidden');
+            fileName.classList.add('hidden');
+        }
+
+        function processQuestions(data) {
+            questions = data.map(q => {
+                const options = [
+                    { id: 1, text: q['Option 1'], isCorrect: q['Correct Answer'] === 1 },
+                    { id: 2, text: q['Option 2'], isCorrect: q['Correct Answer'] === 2 },
+                    { id: 3, text: q['Option 3'], isCorrect: q['Correct Answer'] === 3 },
+                    { id: 4, text: q['Option 4'], isCorrect: q['Correct Answer'] === 4 }
+                ].filter(opt => opt.text);
+
+                return {
+                    question: q['Question Text'],
+                    options: shuffleArray(options),
+                    correctAnswer: q['Correct Answer']
+                };
+            });
+
+            questions = shuffleArray(questions);
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function startQuiz() {
+            document.getElementById('startSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questions[currentIndex];
+            
+            document.getElementById('questionNumber').textContent = 
+                `Câu ${currentIndex + 1} / ${questions.length}`;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const progress = ((currentIndex) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = option.text;
+                div.onclick = () => selectAnswer(option, div);
+                container.appendChild(div);
+            });
+
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('nextBtn').disabled = true;
+            selectedAnswer = null;
+        }
+
+        function selectAnswer(option, element) {
+            if (selectedAnswer) return;
+
+            selectedAnswer = option;
+            const allOptions = document.querySelectorAll('.option');
+            allOptions.forEach(opt => opt.classList.add('disabled'));
+
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('hidden');
+
+            if (option.isCorrect) {
+                element.classList.add('correct');
+                feedback.textContent = '✓ Chính xác!';
+                feedback.className = 'feedback correct';
+                score++;
+            } else {
+                element.classList.add('incorrect');
+                
+                allOptions.forEach((opt, idx) => {
+                    if (questions[currentIndex].options[idx].isCorrect) {
+                        opt.classList.add('correct');
+                    }
+                });
+                
+                feedback.textContent = '✗ Sai rồi! Đáp án đúng đã được đánh dấu màu xanh.';
+                feedback.className = 'feedback incorrect';
+            }
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function handleNext() {
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                displayQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('resultScore').textContent = `${score}/${questions.length}`;
+            document.getElementById('resultText').textContent = 
+                `Bạn đã trả lời đúng ${percentage}% câu hỏi`;
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            
+            questions = shuffleArray(questions);
+            questions.forEach(q => {
+                q.options = shuffleArray(q.options);
+            });
+            
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            displayQuestion();
+        }
+
+        function resetUpload() {
+            document.getElementById('startSection').classList.add('hidden');
+            document.getElementById('uploadSection').classList.remove('hidden');
+            fileInput.value = '';
+            fileName.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+        }
+
+        function resetAll() {
+            currentIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            questions = [];
+            
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('uploadSection').classList.remove('hidden');
+            fileInput.value = '';
+            fileName.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
