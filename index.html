@@ -145,12 +145,16 @@
         
         .option.correct {
             border-color: #4caf50;
-            background: #e8f5e9;
+            background: #4caf50;
+            color: white;
+            font-weight: 600;
         }
         
         .option.incorrect {
             border-color: #f44336;
-            background: #ffebee;
+            background: #f44336;
+            color: white;
+            font-weight: 600;
         }
         
         .option.disabled {
@@ -166,13 +170,13 @@
         }
         
         .feedback.correct {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: #4caf50;
+            color: white;
         }
         
         .feedback.incorrect {
-            background: #ffebee;
-            color: #c62828;
+            background: #f44336;
+            color: white;
         }
         
         .btn {
@@ -311,6 +315,7 @@
         let currentIndex = 0;
         let score = 0;
         let selectedAnswer = null;
+        let autoNextTimer = null;
 
         const uploadBox = document.getElementById('uploadBox');
         const fileInput = document.getElementById('fileInput');
@@ -428,6 +433,12 @@
         function displayQuestion() {
             const question = questions[currentIndex];
             
+            // Clear timer nếu có
+            if (autoNextTimer) {
+                clearTimeout(autoNextTimer);
+                autoNextTimer = null;
+            }
+            
             document.getElementById('questionNumber').textContent = 
                 `Câu ${currentIndex + 1} / ${questions.length}`;
             document.getElementById('questionText').textContent = question.question;
@@ -448,6 +459,7 @@
 
             document.getElementById('feedback').classList.add('hidden');
             document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').textContent = 'Câu tiếp theo →';
             selectedAnswer = null;
         }
 
@@ -466,6 +478,9 @@
                 feedback.textContent = '✓ Chính xác!';
                 feedback.className = 'feedback correct';
                 score++;
+                
+                // Tự động chuyển câu sau 10 giây
+                startAutoNext(10);
             } else {
                 element.classList.add('incorrect');
                 
@@ -475,14 +490,41 @@
                     }
                 });
                 
-                feedback.textContent = '✗ Sai rồi! Đáp án đúng đã được đánh dấu màu xanh.';
+                feedback.textContent = '✗ Sai rồi! Đáp án đúng: màu xanh lá';
                 feedback.className = 'feedback incorrect';
+                
+                // Tự động chuyển câu sau 10 giây
+                startAutoNext(10);
             }
 
             document.getElementById('nextBtn').disabled = false;
         }
+        
+        function startAutoNext(seconds) {
+            let countdown = seconds;
+            const nextBtn = document.getElementById('nextBtn');
+            
+            function updateButton() {
+                nextBtn.textContent = `Câu tiếp theo (${countdown}s) →`;
+                countdown--;
+                
+                if (countdown < 0) {
+                    handleNext();
+                } else {
+                    autoNextTimer = setTimeout(updateButton, 1000);
+                }
+            }
+            
+            updateButton();
+        }
 
         function handleNext() {
+            // Clear timer
+            if (autoNextTimer) {
+                clearTimeout(autoNextTimer);
+                autoNextTimer = null;
+            }
+            
             if (currentIndex < questions.length - 1) {
                 currentIndex++;
                 displayQuestion();
