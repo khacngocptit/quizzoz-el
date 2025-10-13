@@ -398,6 +398,8 @@
         let autoNextTimer = null;
         let wrongQuestions = []; // Lưu các câu trả lời sai
         let isReviewMode = false; // Đang ở chế độ ôn lại câu sai
+        let originalQuestions = []; // Lưu danh sách câu hỏi gốc
+        let answeredCorrectly = new Set(); // Lưu index các câu đã trả lời đúng
 
         const uploadBox = document.getElementById('uploadBox');
         const fileInput = document.getElementById('fileInput');
@@ -533,11 +535,13 @@
                 return {
                     question: q['Question Text'],
                     options: shuffleArray(options),
-                    correctAnswer: q['Correct Answer']
+                    correctAnswer: q['Correct Answer'],
+                    originalIndex: questions.length // Thêm index gốc để tracking
                 };
             });
 
             questions = shuffleArray(questions);
+            originalQuestions = [...questions]; // Backup danh sách gốc
         }
 
         function shuffleArray(array) {
@@ -565,13 +569,14 @@
             }
             
             let questionNumberText = `Câu ${currentIndex + 1} / ${questions.length}`;
-            if (isReviewMode) {
-                questionNumberText += ' (Ôn lại câu sai ❌)';
+            if (wrongQuestions.length > 0) {
+                questionNumberText += ` | 🔄 Còn ${wrongQuestions.length} câu cần ôn`;
             }
             document.getElementById('questionNumber').textContent = questionNumberText;
             document.getElementById('questionText').textContent = question.question;
             
-            const progress = ((currentIndex) / questions.length) * 100;
+            const totalAnswered = currentIndex + 1;
+            const progress = (totalAnswered / questions.length) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
 
             const container = document.getElementById('optionsContainer');
@@ -606,12 +611,18 @@
                 feedback.textContent = '✓ Chính xác!';
                 feedback.className = 'feedback correct';
                 
+                // Đánh dấu câu này đã trả lời đúng
+                answeredCorrectly.add(questions[currentIndex].question);
+                
+                // Xóa câu này khỏi danh sách câu sai nếu có
+                wrongQuestions = wrongQuestions.filter(q => q.question !== questions[currentIndex].question);
+                
                 if (!isReviewMode) {
                     score++;
                 }
                 
-                // Tự động chuyển câu sau 10 giây
-                startAutoNext(10);
+                // Tự động chuyển câu sau 5 giây
+                startAutoNext(5);
                 document.getElementById('nextBtn').disabled = false;
             } else {
                 element.classList.add('incorrect');
@@ -622,29 +633,25 @@
                     }
                 });
                 
-                feedback.textContent = '✗ Sai rồi! Đáp án đúng: màu xanh lá. Hãy thử lại!';
+                feedback.textContent = '✗ Sai rồi! Xem đáp án đúng (màu xanh) rồi sẽ làm lại câu này sau!';
                 feedback.className = 'feedback incorrect';
                 
-                // Lưu câu sai nếu chưa có
-                if (!isReviewMode) {
-                    const questionData = questions[currentIndex];
-                    const exists = wrongQuestions.some(q => q.question === questionData.question);
-                    if (!exists) {
-                        wrongQuestions.push({
-                            question: questionData.question,
-                            options: questionData.options,
-                            correctAnswer: questionData.correctAnswer
-                        });
-                    }
+                // Thêm câu sai vào danh sách để ôn lại
+                const currentQuestion = questions[currentIndex];
+                const exists = wrongQuestions.some(q => q.question === currentQuestion.question);
+                
+                if (!exists && !answeredCorrectly.has(currentQuestion.question)) {
+                    wrongQuestions.push({
+                        question: currentQuestion.question,
+                        options: [...currentQuestion.options],
+                        correctAnswer: currentQuestion.correctAnswer,
+                        originalIndex: currentQuestion.originalIndex
+                    });
                 }
                 
-                // Sau 3 giây reset để làm lại câu này
-                setTimeout(() => {
-                    displayQuestion();
-                }, 3000);
-                
-                // Không cho bấm Next khi sai
-                document.getElementById('nextBtn').disabled = true;
+                // Tự động chuyển câu sau 8 giây (cho thời gian xem đáp án đúng)
+                startAutoNext(8);
+                document.getElementById('nextBtn').disabled = false;
             }
         }
         
@@ -673,50 +680,58 @@
                 autoNextTimer = null;
             }
             
+            // Kiểm tra có câu sai cần ôn không
+            if (wrongQuestions.length > 0 && Math.random() < 0.4) {
+                // 40% khả năng chèn câu sai vào ngay lập tức
+                insertWrongQuestion();
+                return;
+            }
+            
             if (currentIndex < questions.length - 1) {
                 currentIndex++;
                 displayQuestion();
             } else {
                 // Hết câu hỏi chính
-                if (wrongQuestions.length > 0 && !isReviewMode) {
-                    // Có câu sai, chuyển sang chế độ ôn lại
-                    startReviewMode();
+                if (wrongQuestions.length > 0) {
+                    // Còn câu sai, tiếp tục ôn
+                    insertWrongQuestion();
                 } else {
-                    // Không còn câu sai hoặc đã ôn xong
+                    // Không còn câu sai, hiển thị kết quả
                     showResult();
                 }
             }
         }
         
-        function startReviewMode() {
-            isReviewMode = true;
-            questions = wrongQuestions.map(q => ({
-                question: q.question,
-                options: shuffleArray([...q.options]),
-                correctAnswer: q.correctAnswer
-            }));
-            wrongQuestions = []; // Reset danh sách câu sai
-            currentIndex = 0;
+        function insertWrongQuestion() {
+            // Lấy ngẫu nhiên 1 câu sai
+            const randomIndex = Math.floor(Math.random() * wrongQuestions.length);
+            const wrongQ = wrongQuestions[randomIndex];
             
-            // Hiển thị thông báo
-            const feedback = document.getElementById('feedback');
-            feedback.textContent = '🔄 Bây giờ hãy làm lại các câu sai!';
-            feedback.className = 'feedback incorrect';
-            feedback.classList.remove('hidden');
+            // Đảo lại các đáp án
+            const shuffledQuestion = {
+                question: wrongQ.question,
+                options: shuffleArray([...wrongQ.options]),
+                correctAnswer: wrongQ.correctAnswer,
+                originalIndex: wrongQ.originalIndex
+            };
             
-            setTimeout(() => {
-                displayQuestion();
-            }, 2000);
+            // Chèn câu này vào vị trí hiện tại
+            questions.splice(currentIndex + 1, 0, shuffledQuestion);
+            
+            // Chuyển sang câu tiếp theo (câu sai vừa chèn)
+            currentIndex++;
+            displayQuestion();
         }
 
         function showResult() {
             document.getElementById('quizSection').classList.add('hidden');
             document.getElementById('resultSection').classList.remove('hidden');
             
-            const percentage = Math.round((score / questions.length) * 100);
-            document.getElementById('resultScore').textContent = `${score}/${questions.length}`;
+            const totalOriginalQuestions = originalQuestions.length;
+            const percentage = Math.round((score / totalOriginalQuestions) * 100);
+            document.getElementById('resultScore').textContent = `${score}/${totalOriginalQuestions}`;
             document.getElementById('resultText').textContent = 
-                `Bạn đã trả lời đúng ${percentage}% câu hỏi`;
+                `Bạn đã trả lời đúng ${percentage}% câu hỏi!\n🎉 Hoàn thành tất cả câu hỏi!`;
         }
 
         function restartQuiz() {
@@ -725,11 +740,14 @@
             selectedAnswer = null;
             wrongQuestions = [];
             isReviewMode = false;
+            answeredCorrectly.clear();
             
+            // Reload lại câu hỏi từ originalQuestions
+            questions = originalQuestions.map(q => ({
+                ...q,
+                options: shuffleArray([...q.options])
+            }));
             questions = shuffleArray(questions);
-            questions.forEach(q => {
-                q.options = shuffleArray(q.options);
-            });
             
             document.getElementById('resultSection').classList.add('hidden');
             document.getElementById('quizSection').classList.remove('hidden');
