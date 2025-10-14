@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học 40 Topics - Flashcard</title>
+    <title>Học 40 Topics - Sắp Xếp Câu</title>
     <style>
         * {
             margin: 0;
@@ -107,7 +107,7 @@
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -144,117 +144,238 @@
             background: #d32f2f;
         }
 
-        .flashcard {
+        .topic-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 60px 40px;
-            border-radius: 20px;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: transform 0.3s;
+            text-align: center;
         }
 
-        .flashcard:hover {
-            transform: scale(1.02);
-        }
-
-        .flashcard h2 {
+        .topic-header h2 {
             font-size: 2em;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
-        .flashcard .acronym {
-            font-size: 3em;
-            font-weight: bold;
-            letter-spacing: 10px;
-            margin: 20px 0;
-        }
-
-        .flashcard .hint {
+        .topic-header .hint {
             font-size: 1.2em;
             font-style: italic;
             opacity: 0.9;
         }
 
-        .answer-section {
-            display: none;
-            background: #f5f5f5;
-            padding: 30px;
-            border-radius: 15px;
+        .instruction {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 20px;
+            text-align: center;
+            color: #856404;
+            font-weight: bold;
         }
 
-        .answer-section.show {
-            display: block;
+        .drop-zone {
+            background: #f8f9fa;
+            border: 3px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 400px;
+            margin-bottom: 30px;
         }
 
-        .answer-section h3 {
+        .drop-zone h3 {
             color: #667eea;
             margin-bottom: 15px;
+            text-align: center;
         }
 
-        .answer-section ol {
-            list-style-position: inside;
-            color: #333;
+        .drop-zone.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            font-size: 1.2em;
         }
 
-        .answer-section li {
-            padding: 10px;
-            margin: 5px 0;
+        .sentence-pool {
+            background: #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sentence-pool h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sentence-item {
             background: white;
-            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: move;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            user-select: none;
             border-left: 4px solid #667eea;
+        }
+
+        .sentence-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .sentence-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .sentence-item.in-zone {
+            border-left: 4px solid #28a745;
+        }
+
+        .sentence-slot {
+            background: white;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            min-height: 60px;
+            border: 2px dashed #ced4da;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .sentence-slot.over {
+            background: #e7f3ff;
+            border-color: #667eea;
+            border-style: solid;
+        }
+
+        .sentence-slot.filled {
+            border-style: solid;
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .sentence-slot.wrong {
+            border-style: solid;
+            border-color: #dc3545;
+            background: #f8d7da;
+            animation: shake 0.5s;
+        }
+
+        .sentence-slot .number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .sentence-slot .content {
+            flex: 1;
+        }
+
+        .sentence-slot .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .sentence-slot .remove-btn:hover {
+            background: #c82333;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         .controls {
             display: flex;
             gap: 15px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 15px 30px;
+            padding: 15px 40px;
             border: none;
             border-radius: 10px;
-            font-size: 1.1em;
+            font-size: 1.2em;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
         }
 
-        .btn-primary {
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-check {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
-        .btn-primary:hover {
+        .btn-check:hover:not(:disabled) {
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-success {
-            background: #4caf50;
+        .btn-next {
+            background: #28a745;
             color: white;
+            display: none;
         }
 
-        .btn-success:hover {
-            background: #45a049;
+        .btn-next:hover {
+            background: #218838;
         }
 
-        .btn-danger {
-            background: #f44336;
-            color: white;
+        .btn-next.show {
+            display: inline-block;
         }
 
-        .btn-danger:hover {
-            background: #da190b;
+        .feedback {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
         }
 
         .result-modal {
@@ -290,7 +411,7 @@
 
         .result-content .score {
             font-size: 3em;
-            color: #4caf50;
+            color: #28a745;
             font-weight: bold;
             margin: 20px 0;
         }
@@ -308,13 +429,13 @@
                 padding: 20px;
             }
             
-            .flashcard {
-                padding: 40px 20px;
+            .topic-header {
+                padding: 20px;
             }
-            
-            .flashcard .acronym {
-                font-size: 2em;
-                letter-spacing: 5px;
+
+            .sentence-item {
+                font-size: 0.9em;
+                padding: 12px 15px;
             }
         }
     </style>
@@ -322,8 +443,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 Học 40 Topics</h1>
-            <p>Flashcard thông minh - Học nhanh, nhớ lâu</p>
+            <h1>🎯 Học 40 Topics - Sắp Xếp Câu</h1>
+            <p>Kéo thả các câu vào đúng vị trí!</p>
         </div>
 
         <div class="stats">
@@ -333,7 +454,7 @@
             </div>
             <div class="stat-item">
                 <div class="number" id="totalCorrect">0</div>
-                <div>Đúng</div>
+                <div>Hoàn thành</div>
             </div>
             <div class="stat-item">
                 <div class="number" id="accuracy">0%</div>
@@ -349,29 +470,39 @@
                 <button class="back-btn" onclick="backToHome()">← Về trang chủ</button>
             </div>
 
-            <div class="flashcard" id="flashcard" onclick="toggleAnswer()">
+            <div class="topic-header">
                 <h2 id="topicName">Topic Name</h2>
-                <div class="acronym" id="acronym">W-T-S-H-O</div>
-                <div class="hint" id="hint">💡 Nhấn để xem đáp án</div>
+                <div class="hint" id="hint">💡 Gợi ý: ...</div>
             </div>
 
-            <div class="answer-section" id="answerSection">
-                <h3>✅ Đáp án đúng:</h3>
-                <ol id="answerList"></ol>
+            <div class="instruction">
+                🎯 Kéo thả 5 câu dưới đây vào đúng thứ tự từ 1 → 5
             </div>
+
+            <div class="drop-zone" id="dropZone">
+                <h3>📝 Thứ tự đúng (từ trên xuống dưới):</h3>
+                <div id="slotsContainer"></div>
+            </div>
+
+            <div class="sentence-pool">
+                <h3>🔤 Kéo các câu này lên trên:</h3>
+                <div id="sentencePool"></div>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
 
             <div class="controls">
-                <button class="btn btn-danger" onclick="markWrong()">❌ Sai</button>
-                <button class="btn btn-success" onclick="markCorrect()">✅ Đúng</button>
+                <button class="btn btn-check" onclick="checkAnswer()" id="checkBtn">🔍 Kiểm tra</button>
+                <button class="btn btn-next" onclick="nextTopic()" id="nextBtn">Câu tiếp theo →</button>
             </div>
         </div>
 
         <div class="result-modal" id="resultModal">
             <div class="result-content">
-                <h2>🎉 Hoàn thành!</h2>
+                <h2>🎉 Hoàn thành nhóm!</h2>
                 <div class="score" id="finalScore">8/8</div>
-                <p id="resultMessage">Xuất sắc! Bạn đã nhớ tất cả!</p>
-                <button class="btn btn-primary" onclick="closeResult()" style="margin-top: 20px;">Đóng</button>
+                <p id="resultMessage">Xuất sắc! Bạn đã hoàn thành tất cả!</p>
+                <button class="btn btn-check" onclick="closeResult()" style="margin-top: 20px;">Đóng</button>
             </div>
         </div>
     </div>
@@ -382,70 +513,70 @@
                 name: "Nhóm 1: Quy trình & Thủ tục",
                 description: "Topics 1-8",
                 topics: [
-                    {name: "Conference", acronym: "W-T-S-H-O", hint: "Wét Thẻ, Show Huy, Ổn", answers: ["When you have a conference pass, go to the lift on the right", "Take the lift to the third floor, go to the main desk", "Show your pass from the conference to a member of staff at the desk", "He or she will give you a seat number for the talk at the main hall", "Once you enter the hall, someone will find the seat for you"]},
-                    {name: "Natural History Centre", acronym: "T-T-A-T-A", hint: "Tôi Tới, Anh Thấy Ai?", answers: ["The most important of these is the Natural History centre", "The entrance to the centre is on the town's main square", "As you enter the square, you will see a set of stairs to your left", "The ticket office is on the top of these stairs, the staff there are very helpful", "As well as selling tickets, they can provide maps and useful tour information"]},
-                    {name: "Nộp bài papers work", acronym: "I-W-S-A-F", hint: "I Want Some Apple Fresh", answers: ["In your account, you have to click on the 'Open a new window' button", "When you do this, a new window will be automatically opened for you", "Simply drag and drop the files into the designated area provided", "After that, go back to your account and click the submit button", "Finally, check your email to confirm that your submission was successful"]},
-                    {name: "Traffic problems", acronym: "T-T-A-F-T", hint: "Tắc Tệ, Ách Fortunately Thôi", answers: ["They were out of order, and the traffic was moving slowly", "This caused a long delay on the road", "As a result of the delay, many people were not able to get to work on time", "Fortunately, by the evening, the traffic lights worked again", "There was no further delay, and people could go home after work"]},
-                    {name: "Animal hospital", acronym: "W-Y-I-B-T", hint: "Why In Before These?", answers: ["When you arrive, go to the reception desk", "You must show this to get access to the animals", "Inside the building, you will see all the animals", "Before you look at the animals, you can join different activities", "These activities include feeding animals and taking photos"]},
-                    {name: "Zidane", acronym: "A-H-W-L-S", hint: "Anh Hôm While Later Since", answers: ["As a child, he played football in the streets", "He then left home to pursue his football dream", "While he was in France, he became a world-famous player", "Later, he left France and played for other big clubs", "Since retiring, he has become a successful football manager"]},
-                    {name: "New students", acronym: "W-A-H-Y-Y", hint: "Way, A He, You You", answers: ["When you arrive at the university, go to the main building", "A member of staff will meet you at the entrance", "He or she will give you a student card", "You can use this card to access all university facilities", "You will find these facilities on the campus map"]},
-                    {name: "Key card", acronym: "T-I-H-Y-H", hint: "To If He, You He", answers: ["To access the building, you will need a key card", "If you lose this, go to the security office immediately", "He or she will ask you for identification", "You will also need to fill in a form", "He or she will give you a replacement card"]}
+                    {name: "Conference", hint: "Wét Thẻ, Show Huy, Ổn", answers: ["When you have a conference pass, go to the lift on the right", "Take the lift to the third floor, go to the main desk", "Show your pass from the conference to a member of staff at the desk", "He or she will give you a seat number for the talk at the main hall", "Once you enter the hall, someone will find the seat for you"]},
+                    {name: "Natural History Centre", hint: "Tôi Tới, Anh Thấy Ai?", answers: ["The most important of these is the Natural History centre", "The entrance to the centre is on the town's main square", "As you enter the square, you will see a set of stairs to your left", "The ticket office is on the top of these stairs, the staff there are very helpful", "As well as selling tickets, they can provide maps and useful tour information"]},
+                    {name: "Nộp bài papers work", hint: "I Want Some Apple Fresh", answers: ["In your account, you have to click on the 'Open a new window' button", "When you do this, a new window will be automatically opened for you", "Simply drag and drop the files into the designated area provided", "After that, go back to your account and click the submit button", "Finally, check your email to confirm that your submission was successful"]},
+                    {name: "Traffic problems", hint: "Tắc Tệ, Ách Fortunately Thôi", answers: ["They were out of order, and the traffic was moving slowly", "This caused a long delay on the road", "As a result of the delay, many people were not able to get to work on time", "Fortunately, by the evening, the traffic lights worked again", "There was no further delay, and people could go home after work"]},
+                    {name: "Animal hospital", hint: "Why In Before These?", answers: ["When you arrive, go to the reception desk", "You must show this to get access to the animals", "Inside the building, you will see all the animals", "Before you look at the animals, you can join different activities", "These activities include feeding animals and taking photos"]},
+                    {name: "Zidane", hint: "Anh Hôm While Later Since", answers: ["As a child, he played football in the streets", "He then left home to pursue his football dream", "While he was in France, he became a world-famous player", "Later, he left France and played for other big clubs", "Since retiring, he has become a successful football manager"]},
+                    {name: "New students", hint: "Way, A He, You You", answers: ["When you arrive at the university, go to the main building", "A member of staff will meet you at the entrance", "He or she will give you a student card", "You can use this card to access all university facilities", "You will find these facilities on the campus map"]},
+                    {name: "Key card", hint: "To If He, You He", answers: ["To access the building, you will need a key card", "If you lose this, go to the security office immediately", "He or she will ask you for identification", "You will also need to fill in a form", "He or she will give you a replacement card"]}
                 ]
             },
             {
                 name: "Nhóm 2: Mua sắm & Thuê",
                 description: "Topics 9-16",
                 topics: [
-                    {name: "Buying a house", acronym: "T-I-T-O-S", hint: "To In The Other Such", answers: ["The first and most important thing is to decide on a budget", "In order to choose the right house, visit many different properties", "The most important of these factors is the location", "Other factors to look at include size and condition", "Such requirements of course depend on your personal needs"]},
-                    {name: "Renting a bike", acronym: "G-C-E-W-A", hint: "Go Choose Enter When At", answers: ["Go to the collection point and find a bike", "Choose 'Hire the cycle', then scan the QR code", "Enter your code in the machine", "When the light shows, unlock the bike", "At the end of your ride, return it to any station"]},
-                    {name: "My first car", acronym: "I-H-S-I-W", hint: "I Have, So I We", answers: ["I had just passed my driving test", "However, I didn't have much money to buy a car", "So, when I saw an advertisement for a cheap car", "I called the number immediately", "We agreed on a price and I bought it"]},
-                    {name: "The Great Belly", acronym: "S-A-A-H-I", hint: "Shanghai At A, However In", answers: ["She was born in Shanghai, China", "At that time, Shanghai was a very different city", "A few years after her birth, her family moved to America", "However, Belly missed China and wanted to return", "In the 1980s, she went back to Shanghai"]},
-                    {name: "Nộp report", acronym: "B-R-Y-W-A", hint: "Before Remember You, When After", answers: ["Before writing, spend a lot of time on research", "Remember to save the document regularly", "You should also include references and citations", "When you have finished writing, check for errors", "After making corrections, send it to your supervisor"]},
-                    {name: "Máy in printer", acronym: "F-W-A-I-B", hint: "First When A, If Before", answers: ["Firstly, find an appropriate printer near you", "When the printer is ready, put your paper in the tray", "A light comes on to show it is working", "If the light is red, there is a problem", "Before using, remember to collect your documents"]},
-                    {name: "Albert Einstein", acronym: "A-H-S-T-P", hint: "As His She, These Princeton", answers: ["As a child, he was very interested in mathematics", "His best friend in university was a woman", "She later became his wife", "These were so advanced that few people understood them", "Princeton University in the United States offered him a job"]},
-                    {name: "Hand in assignment", acronym: "F-W-A-Y-T", hint: "First When Also, You The", answers: ["First, it is a good idea to read through your work", "When you have corrected all the mistakes", "Also, remember to print two copies", "You hand your assignment in at the office", "The staff will check your student ID"]}
+                    {name: "Buying a house", hint: "To In The Other Such", answers: ["The first and most important thing is to decide on a budget", "In order to choose the right house, visit many different properties", "The most important of these factors is the location", "Other factors to look at include size and condition", "Such requirements of course depend on your personal needs"]},
+                    {name: "Renting a bike", hint: "Go Choose Enter When At", answers: ["Go to the collection point and find a bike", "Choose 'Hire the cycle', then scan the QR code", "Enter your code in the machine", "When the light shows, unlock the bike", "At the end of your ride, return it to any station"]},
+                    {name: "My first car", hint: "I Have, So I We", answers: ["I had just passed my driving test", "However, I didn't have much money to buy a car", "So, when I saw an advertisement for a cheap car", "I called the number immediately", "We agreed on a price and I bought it"]},
+                    {name: "The Great Belly", hint: "Shanghai At A, However In", answers: ["She was born in Shanghai, China", "At that time, Shanghai was a very different city", "A few years after her birth, her family moved to America", "However, Belly missed China and wanted to return", "In the 1980s, she went back to Shanghai"]},
+                    {name: "Nộp report", hint: "Before Remember You, When After", answers: ["Before writing, spend a lot of time on research", "Remember to save the document regularly", "You should also include references and citations", "When you have finished writing, check for errors", "After making corrections, send it to your supervisor"]},
+                    {name: "Máy in printer", hint: "First When A, If Before", answers: ["Firstly, find an appropriate printer near you", "When the printer is ready, put your paper in the tray", "A light comes on to show it is working", "If the light is red, there is a problem", "Before using, remember to collect your documents"]},
+                    {name: "Albert Einstein", hint: "As His She, These Princeton", answers: ["As a child, he was very interested in mathematics", "His best friend in university was a woman", "She later became his wife", "These were so advanced that few people understood them", "Princeton University in the United States offered him a job"]},
+                    {name: "Hand in assignment", hint: "First When Also, You The", answers: ["First, it is a good idea to read through your work", "When you have corrected all the mistakes", "Also, remember to print two copies", "You hand your assignment in at the office", "The staff will check your student ID"]}
                 ]
             },
             {
                 name: "Nhóm 3: Hướng dẫn & An toàn",
                 description: "Topics 17-24",
                 topics: [
-                    {name: "Drivers", acronym: "Y-I-Y-W-Y", hint: "You In, You When You", answers: ["You should arrive at the depot early in the morning", "In the office, you will receive instructions for the day", "You must follow the route given to you", "When you have completed your deliveries", "You must return your vehicle to the depot"]},
-                    {name: "Conference", acronym: "W-A-I-I-A", hint: "When A, Inside If After", answers: ["When you arrive at the conference center", "A staff member will give you a welcome pack", "Inside you will find a program and badge", "If you would like to attend workshops, register early", "After finished, there will be networking drinks"]},
-                    {name: "Race", acronym: "O-R-T-A-P", hint: "On Runners To, A Please", answers: ["On your arrival, please go to the registration desk", "Runners must register here before the race", "To do this, you will need to show ID", "A member of staff will give you a race number", "Please put this on the front of your shirt"]},
-                    {name: "Fire instructions", acronym: "W-N-T-W-O", hint: "When Next Through, When Outside", answers: ["When you hear the fire alarm, stay calm", "Next, walk calmly to the nearest exit", "Through these doors, there are stairs", "When you reach the bottom, go outside", "Outside, gather on the grass area"]},
-                    {name: "Plant rose trees", acronym: "I-P-P-O-T", hint: "In Put Push, Once The", answers: ["In the chosen place, dig a hole", "Put the base of the tree in the hole", "Push this down by filling with soil", "Once you have planted it, water regularly", "The amount of water depends on the weather"]},
-                    {name: "Vũ trụ", acronym: "A-B-T-T-A", hint: "As Because This, They A", answers: ["As a child, she dreamed of becoming an astronaut", "Because of her dream, she studied very hard", "This hard work required great dedication", "They got her to train for space missions", "A year later, she flew into space"]},
-                    {name: "Car park", acronym: "W-T-P-B-T", hint: "When This Please, Before The", answers: ["When you arrive, please take a ticket", "This ticket will show your entry time", "Please display the ticket on your dashboard", "Before you leave, please pay at the machine", "The machine will read your ticket"]},
-                    {name: "Wellness Fair", acronym: "T-O-A-A-F", hint: "The Over After, Activities Families", answers: ["The wellness fair was held at the community center", "Over 60 participants attended, making it a success", "After the workshops, prizes were given to winners", "Activities included cooking demos, yoga, and health checks", "Families enjoyed sampling healthy food options"]}
+                    {name: "Drivers", hint: "You In, You When You", answers: ["You should arrive at the depot early in the morning", "In the office, you will receive instructions for the day", "You must follow the route given to you", "When you have completed your deliveries", "You must return your vehicle to the depot"]},
+                    {name: "Conference", hint: "When A, Inside If After", answers: ["When you arrive at the conference center", "A staff member will give you a welcome pack", "Inside you will find a program and badge", "If you would like to attend workshops, register early", "After finished, there will be networking drinks"]},
+                    {name: "Race", hint: "On Runners To, A Please", answers: ["On your arrival, please go to the registration desk", "Runners must register here before the race", "To do this, you will need to show ID", "A member of staff will give you a race number", "Please put this on the front of your shirt"]},
+                    {name: "Fire instructions", hint: "When Next Through, When Outside", answers: ["When you hear the fire alarm, stay calm", "Next, walk calmly to the nearest exit", "Through these doors, there are stairs", "When you reach the bottom, go outside", "Outside, gather on the grass area"]},
+                    {name: "Plant rose trees", hint: "In Put Push, Once The", answers: ["In the chosen place, dig a hole", "Put the base of the tree in the hole", "Push this down by filling with soil", "Once you have planted it, water regularly", "The amount of water depends on the weather"]},
+                    {name: "Vũ trụ", hint: "As Because This, They A", answers: ["As a child, she dreamed of becoming an astronaut", "Because of her dream, she studied very hard", "This hard work required great dedication", "They got her to train for space missions", "A year later, she flew into space"]},
+                    {name: "Car park", hint: "When This Please, Before The", answers: ["When you arrive, please take a ticket", "This ticket will show your entry time", "Please display the ticket on your dashboard", "Before you leave, please pay at the machine", "The machine will read your ticket"]},
+                    {name: "Wellness Fair", hint: "The Over After, Activities Families", answers: ["The wellness fair was held at the community center", "Over 60 participants attended, making it a success", "After the workshops, prizes were given to winners", "Activities included cooking demos, yoga, and health checks", "Families enjoyed sampling healthy food options"]}
                 ]
             },
             {
                 name: "Nhóm 4: Đời sống & Xã hội",
                 description: "Topics 25-32",
                 topics: [
-                    {name: "Public Transportation", acronym: "C-O-D-D-M", hint: "City Old Due, Drivers Modern", answers: ["City buses today are more comfortable than before", "Older buses often lacked air conditioning and comfort", "Due to budget limitations, upgrades took many years", "Drivers and staff now receive better training", "Modern buses often use clean energy sources"]},
-                    {name: "Cafe", acronym: "I-D-W-I-I", hint: "It Despite When, I It", answers: ["It was FULL OF people when I arrived", "DESPITE THE CROWD, they served quickly", "When I first looked at the menu", "I had to choose between coffee or tea", "It was really good and worth the visit"]},
-                    {name: "History of travel", acronym: "I-T-A-B-I", hint: "In The After, Because It", answers: ["In the past, only rich people could travel", "The invention of cars changed everything", "After these two means of transport", "Because flying with them was expensive", "It is more convenient and affordable now"]},
-                    {name: "Singer", acronym: "B-D-D-T-T", hint: "Before During During, This They", answers: ["Before becoming famous at 18, he studied music", "During this education, he learned many instruments", "During his stage performances, he acted strangely", "This strange ways of performing attracted attention", "They started to follow him everywhere"]},
-                    {name: "Films", acronym: "T-T-I-T-T", hint: "The This In, This Things", answers: ["The films in that era were very different", "This is because they had limited technology", "In addition to these technical problems", "This lack of money affected quality", "Things have changed over the years"]},
-                    {name: "First woman in Space", acronym: "W-H-T-A-S", hint: "With Her This, As Some", answers: ["With the support of her family", "Her degree enabled her to join NASA", "This is about space, science and engineering", "As part of this program, she trained hard", "Some of those were very challenging"]},
-                    {name: "Music show", acronym: "T-B-M-T-H", hint: "The Because Many, The He", answers: ["The local authority planned a music event", "Because of this, it attracted many people", "Many of them arrived early to get seats", "The staff there had prepared everything", "He performed for two hours"]},
-                    {name: "Family sport day", acronym: "I-S-A-T-T", hint: "It Sixty After, These They", answers: ["It started early on Saturday morning", "Sixty men and women joined the competition", "After receiving the prize, they celebrated", "These activities included football, running and swimming", "They were all very happy"]}
+                    {name: "Public Transportation", hint: "City Old Due, Drivers Modern", answers: ["City buses today are more comfortable than before", "Older buses often lacked air conditioning and comfort", "Due to budget limitations, upgrades took many years", "Drivers and staff now receive better training", "Modern buses often use clean energy sources"]},
+                    {name: "Cafe", hint: "It Despite When, I It", answers: ["It was FULL OF people when I arrived", "DESPITE THE CROWD, they served quickly", "When I first looked at the menu", "I had to choose between coffee or tea", "It was really good and worth the visit"]},
+                    {name: "History of travel", hint: "In The After, Because It", answers: ["In the past, only rich people could travel", "The invention of cars changed everything", "After these two means of transport", "Because flying with them was expensive", "It is more convenient and affordable now"]},
+                    {name: "Singer", hint: "Before During During, This They", answers: ["Before becoming famous at 18, he studied music", "During this education, he learned many instruments", "During his stage performances, he acted strangely", "This strange ways of performing attracted attention", "They started to follow him everywhere"]},
+                    {name: "Films", hint: "The This In, This Things", answers: ["The films in that era were very different", "This is because they had limited technology", "In addition to these technical problems", "This lack of money affected quality", "Things have changed over the years"]},
+                    {name: "First woman in Space", hint: "With Her This, As Some", answers: ["With the support of her family", "Her degree enabled her to join NASA", "This is about space, science and engineering", "As part of this program, she trained hard", "Some of those were very challenging"]},
+                    {name: "Music show", hint: "The Because Many, The He", answers: ["The local authority planned a music event", "Because of this, it attracted many people", "Many of them arrived early to get seats", "The staff there had prepared everything", "He performed for two hours"]},
+                    {name: "Family sport day", hint: "It Sixty After, These They", answers: ["It started early on Saturday morning", "Sixty men and women joined the competition", "After receiving the prize, they celebrated", "These activities included football, running and swimming", "They were all very happy"]}
                 ]
             },
             {
                 name: "Nhóm 5: Công nghệ & Hiện đại",
                 description: "Topics 33-40",
                 topics: [
-                    {name: "Healthy Eating", acronym: "M-I-L-N-T", hint: "Modern In Limited, Nutritionists Today", answers: ["Modern diets emphasize fresh, organic ingredients", "In the past, meals were high in fat", "Limited access to fresh produce affected health", "Nutritionists now educate people about balanced diets", "Today, apps help track calories and nutrients"]},
-                    {name: "Jay Mist", acronym: "W-H-J-A-I", hint: "When He Jay, At It", answers: ["When he was young, he loved performing", "He started his high school drama club", "Jay was really good at voice acting", "At one of these shows, a director noticed him", "It was a big breakthrough in his career"]},
-                    {name: "Plant potatoes", acronym: "A-A-T-W-W", hint: "All An This, When With", answers: ["All you need is a potato with shoots", "An old potato will have green shoots", "This color means it is ready to plant", "When you've done this, cover with soil", "With this care, you will have potatoes"]},
-                    {name: "Tom Harper", acronym: "W-H-H-T-T", hint: "When He He, The This", answers: ["When he was young, he loved reading", "He soon wrote regularly for magazines", "He almost left the profession completely", "The characters he imagined became very popular", "This popularity made Tom a famous writer"]},
-                    {name: "Science textbook", acronym: "T-T-T-Y-I", hint: "The The Then, You In", answers: ["The first step is to observe the phenomenon", "The next one is to form a hypothesis", "Then, you need to test your hypothesis", "You can also compare results with others", "In this way, you can reach conclusions"]},
-                    {name: "Writing about place", acronym: "B-I-E-Y-S", hint: "Before It Even, You Such", answers: ["Before writing about a place, visit it first", "It is important to take detailed notes", "Even if you can remember details", "You should also compare it with other places", "Such comparisons will make your writing interesting"]},
-                    {name: "Workplace evolution", acronym: "F-P-T-T-M", hint: "Flexible Previously Technological, Today Managers", answers: ["Flexible work models are increasingly common", "Previously, employees were confined to offices", "Technological restrictions once made remote work difficult", "Today, businesses are exploring hybrid arrangements", "Managers now utilize software to track productivity"]},
-                    {name: "AI", acronym: "O-T-H-N-M", hint: "Over The High, Nowadays Modern", answers: ["Over the past decade, AI has advanced rapidly", "The early AI systems were limited in capability", "High computational costs previously restricted development", "Nowadays, AI engineers build sophisticated models", "Modern AI tools help automate complex tasks"]}
+                    {name: "Healthy Eating", hint: "Modern In Limited, Nutritionists Today", answers: ["Modern diets emphasize fresh, organic ingredients", "In the past, meals were high in fat", "Limited access to fresh produce affected health", "Nutritionists now educate people about balanced diets", "Today, apps help track calories and nutrients"]},
+                    {name: "Jay Mist", hint: "When He Jay, At It", answers: ["When he was young, he loved performing", "He started his high school drama club", "Jay was really good at voice acting", "At one of these shows, a director noticed him", "It was a big breakthrough in his career"]},
+                    {name: "Plant potatoes", hint: "All An This, When With", answers: ["All you need is a potato with shoots", "An old potato will have green shoots", "This color means it is ready to plant", "When you've done this, cover with soil", "With this care, you will have potatoes"]},
+                    {name: "Tom Harper", hint: "When He He, The This", answers: ["When he was young, he loved reading", "He soon wrote regularly for magazines", "He almost left the profession completely", "The characters he imagined became very popular", "This popularity made Tom a famous writer"]},
+                    {name: "Science textbook", hint: "The The Then, You In", answers: ["The first step is to observe the phenomenon", "The next one is to form a hypothesis", "Then, you need to test your hypothesis", "You can also compare results with others", "In this way, you can reach conclusions"]},
+                    {name: "Writing about place", hint: "Before It Even, You Such", answers: ["Before writing about a place, visit it first", "It is important to take detailed notes", "Even if you can remember details", "You should also compare it with other places", "Such comparisons will make your writing interesting"]},
+                    {name: "Workplace evolution", hint: "Flexible Previously Technological, Today Managers", answers: ["Flexible work models are increasingly common", "Previously, employees were confined to offices", "Technological restrictions once made remote work difficult", "Today, businesses are exploring hybrid arrangements", "Managers now utilize software to track productivity"]},
+                    {name: "AI", hint: "Over The High, Nowadays Modern", answers: ["Over the past decade, AI has advanced rapidly", "The early AI systems were limited in capability", "High computational costs previously restricted development", "Nowadays, AI engineers build sophisticated models", "Modern AI tools help automate complex tasks"]}
                 ]
             }
         ];
@@ -453,10 +584,11 @@
         let currentGroup = 0;
         let currentTopicIndex = 0;
         let correctCount = 0;
-        let wrongCount = 0;
         let totalLearned = parseInt(localStorage.getItem('totalLearned')) || 0;
         let totalCorrect = parseInt(localStorage.getItem('totalCorrect')) || 0;
         let totalAttempts = parseInt(localStorage.getItem('totalAttempts')) || 0;
+        let slots = [];
+        let draggedElement = null;
 
         function initGroups() {
             const container = document.getElementById('groupsContainer');
@@ -487,7 +619,6 @@
             currentGroup = groupIndex;
             currentTopicIndex = 0;
             correctCount = 0;
-            wrongCount = 0;
             
             document.getElementById('groupsContainer').style.display = 'none';
             document.querySelector('.stats').style.display = 'none';
@@ -498,44 +629,179 @@
 
         function showTopic() {
             const topic = groups[currentGroup].topics[currentTopicIndex];
-            const answerSection = document.getElementById('answerSection');
-            answerSection.classList.remove('show');
             
             document.getElementById('quizProgress').textContent = 
                 `Câu ${currentTopicIndex + 1}/${groups[currentGroup].topics.length}`;
             document.getElementById('topicName').textContent = topic.name;
-            document.getElementById('acronym').textContent = topic.acronym;
             document.getElementById('hint').textContent = `💡 ${topic.hint}`;
             
-            const answerList = document.getElementById('answerList');
-            answerList.innerHTML = '';
-            topic.answers.forEach(answer => {
-                const li = document.createElement('li');
-                li.textContent = answer;
-                answerList.appendChild(li);
+            // Reset slots
+            slots = [null, null, null, null, null];
+            
+            // Create slots
+            const slotsContainer = document.getElementById('slotsContainer');
+            slotsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 5; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'sentence-slot';
+                slot.dataset.index = i;
+                slot.innerHTML = `
+                    <div class="number">${i + 1}</div>
+                    <div class="content">Kéo câu vào đây...</div>
+                `;
+                slot.addEventListener('dragover', handleDragOver);
+                slot.addEventListener('drop', handleDrop);
+                slot.addEventListener('dragleave', handleDragLeave);
+                slotsContainer.appendChild(slot);
+            }
+            
+            // Shuffle and create sentence pool
+            const shuffled = [...topic.answers].sort(() => Math.random() - 0.5);
+            const pool = document.getElementById('sentencePool');
+            pool.innerHTML = '';
+            
+            shuffled.forEach((sentence, index) => {
+                const item = document.createElement('div');
+                item.className = 'sentence-item';
+                item.draggable = true;
+                item.textContent = sentence;
+                item.dataset.sentence = sentence;
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+                pool.appendChild(item);
             });
+            
+            // Reset UI
+            document.getElementById('feedback').classList.remove('show', 'success', 'error');
+            document.getElementById('nextBtn').classList.remove('show');
+            document.getElementById('checkBtn').disabled = false;
         }
 
-        function toggleAnswer() {
-            const answerSection = document.getElementById('answerSection');
-            answerSection.classList.toggle('show');
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
         }
 
-        function markCorrect() {
-            correctCount++;
-            totalCorrect++;
-            totalLearned++;
-            totalAttempts++;
-            saveProgress();
-            nextTopic();
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
         }
 
-        function markWrong() {
-            wrongCount++;
-            totalLearned++;
-            totalAttempts++;
-            saveProgress();
-            nextTopic();
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            if (!e.currentTarget.classList.contains('filled')) {
+                e.currentTarget.classList.add('over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('over');
+            
+            const slot = e.currentTarget;
+            const index = parseInt(slot.dataset.index);
+            
+            // Check if slot is already filled
+            if (slots[index] !== null) return;
+            
+            // Remove from pool
+            draggedElement.remove();
+            
+            // Add to slot
+            slots[index] = draggedElement.dataset.sentence;
+            slot.classList.add('filled');
+            slot.innerHTML = `
+                <div class="number">${index + 1}</div>
+                <div class="content">${draggedElement.dataset.sentence}</div>
+                <button class="remove-btn" onclick="removeSentence(${index})">✕</button>
+            `;
+        }
+
+        function removeSentence(index) {
+            const sentence = slots[index];
+            slots[index] = null;
+            
+            // Update slot
+            const slotElement = document.querySelectorAll('.sentence-slot')[index];
+            slotElement.classList.remove('filled', 'wrong');
+            slotElement.innerHTML = `
+                <div class="number">${index + 1}</div>
+                <div class="content">Kéo câu vào đây...</div>
+            `;
+            
+            // Add back to pool
+            const pool = document.getElementById('sentencePool');
+            const item = document.createElement('div');
+            item.className = 'sentence-item';
+            item.draggable = true;
+            item.textContent = sentence;
+            item.dataset.sentence = sentence;
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragend', handleDragEnd);
+            pool.appendChild(item);
+            
+            // Reset feedback
+            document.getElementById('feedback').classList.remove('show', 'success', 'error');
+            document.getElementById('nextBtn').classList.remove('show');
+            document.getElementById('checkBtn').disabled = false;
+        }
+
+        function checkAnswer() {
+            // Check if all slots filled
+            if (slots.some(s => s === null)) {
+                showFeedback('❌ Vui lòng điền đầy đủ 5 câu!', 'error');
+                return;
+            }
+            
+            const topic = groups[currentGroup].topics[currentTopicIndex];
+            const correct = slots.every((s, i) => s === topic.answers[i]);
+            
+            if (correct) {
+                // All correct
+                showFeedback('🎉 Chính xác! Bạn đã sắp xếp đúng!', 'success');
+                document.getElementById('nextBtn').classList.add('show');
+                document.getElementById('checkBtn').disabled = true;
+                
+                // Mark all slots as correct
+                document.querySelectorAll('.sentence-slot').forEach(slot => {
+                    slot.classList.add('filled');
+                    slot.classList.remove('wrong');
+                });
+                
+                correctCount++;
+                totalCorrect++;
+                totalLearned++;
+                totalAttempts++;
+                saveProgress();
+            } else {
+                // Some wrong
+                showFeedback('❌ Chưa đúng! Hãy thử lại. Kiểm tra các ô màu đỏ.', 'error');
+                
+                // Highlight wrong slots
+                slots.forEach((s, i) => {
+                    const slotElement = document.querySelectorAll('.sentence-slot')[i];
+                    if (s !== topic.answers[i]) {
+                        slotElement.classList.add('wrong');
+                    } else {
+                        slotElement.classList.remove('wrong');
+                    }
+                });
+                
+                totalAttempts++;
+                saveProgress();
+            }
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = `feedback show ${type}`;
         }
 
         function nextTopic() {
@@ -555,7 +821,7 @@
             
             let message = '';
             if (percentage === 100) {
-                message = '🌟 Xuất sắc! Bạn đã nhớ tất cả!';
+                message = '🌟 Xuất sắc! Bạn đã hoàn thành tất cả!';
             } else if (percentage >= 75) {
                 message = '👍 Tốt lắm! Tiếp tục phát huy!';
             } else if (percentage >= 50) {
