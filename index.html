@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS Part 4 - Practice Mode</title>
+    <title>IELTS Part 4 - Luyện tập sắp xếp</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
         }
         
@@ -35,60 +35,15 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .mode-selector {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        
-        .mode-btn {
-            padding: 15px 30px;
-            font-size: 1.1em;
-            border: 2px solid white;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .mode-btn.active {
-            background: white;
-            color: #667eea;
-            font-weight: bold;
-        }
-        
-        .timer {
+        .progress {
             background: rgba(255,255,255,0.2);
             padding: 15px;
             border-radius: 10px;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
+            color: white;
             text-align: center;
-            color: white;
-        }
-        
-        .progress-bar {
-            background: rgba(255,255,255,0.2);
-            height: 30px;
-            border-radius: 15px;
+            font-size: 1.3em;
             margin-bottom: 20px;
-            overflow: hidden;
             backdrop-filter: blur(10px);
-        }
-        
-        .progress-fill {
-            background: linear-gradient(90deg, #48c6ef 0%, #6f86d6 100%);
-            height: 100%;
-            transition: width 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
         }
         
         .card {
@@ -96,106 +51,68 @@
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            min-height: 500px;
         }
         
         .topic-title {
             font-size: 2em;
             color: #667eea;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: center;
             font-weight: bold;
         }
         
-        .flag-tags {
-            background: #f0f4ff;
+        .flag-tags-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-bottom: 30px;
-            border-left: 5px solid #667eea;
+            color: white;
         }
         
-        .flag-tags h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 1.2em;
+        .flag-tags-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
         }
         
         .tags-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
+            justify-content: center;
         }
         
         .tag {
-            background: #667eea;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 0.95em;
             font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
-        .tags-meaning {
-            color: #666;
-            font-style: italic;
-            margin-top: 10px;
-        }
-        
-        /* Study Mode */
-        .points-list {
-            list-style: none;
-        }
-        
-        .points-list li {
-            padding: 15px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-            transition: all 0.3s ease;
-        }
-        
-        .points-list li:hover {
-            transform: translateX(10px);
-            background: #e9ecef;
-        }
-        
-        .point-tag {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        
-        .point-meaning {
-            color: #888;
-            font-size: 0.9em;
-            font-style: italic;
-            margin-left: 10px;
-        }
-        
-        /* Practice Mode */
         .sortable-container {
             min-height: 400px;
+            margin-bottom: 25px;
         }
         
         .sortable-item {
-            padding: 15px 20px;
-            margin-bottom: 10px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
             background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #6c757d;
+            border-radius: 12px;
+            border-left: 5px solid #6c757d;
             cursor: move;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+        
+        .sortable-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
         }
         
         .sortable-item.dragging {
@@ -221,9 +138,10 @@
         }
         
         .drag-handle {
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: #6c757d;
             cursor: grab;
+            user-select: none;
         }
         
         .drag-handle:active {
@@ -232,124 +150,154 @@
         
         .item-number {
             display: inline-block;
-            width: 35px;
-            height: 35px;
+            min-width: 40px;
+            height: 40px;
             background: #6c757d;
             color: white;
             border-radius: 50%;
             text-align: center;
-            line-height: 35px;
+            line-height: 40px;
             font-weight: bold;
+            font-size: 1.1em;
         }
         
         .item-content {
             flex-grow: 1;
         }
         
+        .item-text {
+            font-size: 1.05em;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+        
+        .item-tags {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .point-tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .point-meaning {
+            color: #6c757d;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+        
         .controls {
             display: flex;
             gap: 15px;
-            margin-top: 30px;
             justify-content: center;
             flex-wrap: wrap;
         }
         
         button {
-            padding: 15px 30px;
+            padding: 15px 35px;
             font-size: 1.1em;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
-        .btn-prev {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .btn-next, .btn-check {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-restart {
-            background: #dc3545;
+        .btn-check {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
         }
         
         .btn-shuffle {
-            background: #ffc107;
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
             color: #000;
         }
         
-        button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
         
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        button:active {
+            transform: translateY(-1px);
         }
         
         .feedback {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 10px;
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
             font-size: 1.2em;
             font-weight: bold;
         }
         
         .feedback.success {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
-            border: 2px solid #28a745;
+            border: 3px solid #28a745;
         }
         
         .feedback.error {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
-            border: 2px solid #dc3545;
+            border: 3px solid #dc3545;
         }
         
         .wrong-order {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 20px;
             background: #fff3cd;
-            border-radius: 8px;
-            border-left: 4px solid #ffc107;
+            border-radius: 12px;
+            border-left: 5px solid #ffc107;
+            text-align: left;
         }
         
         .wrong-order-title {
             font-weight: bold;
             color: #856404;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
         }
         
-        .wrong-order-list {
+        .wrong-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
             color: #856404;
             font-size: 0.95em;
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+        .btn-next-topic {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            flex-wrap: wrap;
-            gap: 15px;
+            margin-top: 20px;
+            padding: 15px 40px;
         }
         
-        .stat-item {
-            text-align: center;
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
             background: rgba(255,255,255,0.2);
             padding: 15px 30px;
-            border-radius: 10px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
             backdrop-filter: blur(10px);
-            min-width: 150px;
         }
         
         .stat-value {
@@ -363,25 +311,21 @@
             opacity: 0.9;
         }
         
-        .hidden {
-            display: none;
-        }
-        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
             }
             
             .card {
-                padding: 20px;
+                padding: 25px;
             }
             
             .topic-title {
                 font-size: 1.5em;
             }
             
-            .mode-btn {
-                padding: 12px 20px;
+            button {
+                padding: 12px 25px;
                 font-size: 1em;
             }
         }
@@ -390,68 +334,40 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 IELTS Reading Part 4</h1>
-            <p>Học thuộc và luyện tập 18 Topics</p>
+            <h1>🎯 IELTS Part 4 - Luyện tập sắp xếp</h1>
+            <p>Kéo thả để sắp xếp đúng thứ tự</p>
         </div>
         
-        <div class="mode-selector">
-            <button class="mode-btn active" onclick="switchMode('study')">📚 Chế độ học</button>
-            <button class="mode-btn" onclick="switchMode('practice')">🎮 Chế độ luyện tập</button>
-        </div>
-        
-        <div class="timer">
-            ⏱️ Thời gian: <span id="timer">04:00:00</span>
-        </div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress">
-                <span id="progress-text">0/18</span>
-            </div>
+        <div class="progress">
+            Topic: <span id="current-topic">1</span> / 18
         </div>
         
         <div class="card">
             <h2 class="topic-title" id="topic-name"></h2>
             
-            <div class="flag-tags">
-                <h3>🏷️ Flag Tags (Từ khóa quan trọng):</h3>
+            <div class="flag-tags-box">
+                <h3>🏷️ Từ khóa quan trọng - Ghi nhớ thứ tự này:</h3>
                 <div class="tags-list" id="tags-list"></div>
-                <div class="tags-meaning" id="tags-meaning"></div>
             </div>
             
-            <div id="study-mode" class="study-mode">
-                <ul class="points-list" id="points-list"></ul>
-            </div>
-            
-            <div id="practice-mode" class="practice-mode hidden">
-                <div class="sortable-container" id="sortable-container"></div>
-                <div id="feedback"></div>
-            </div>
+            <div class="sortable-container" id="sortable-container"></div>
             
             <div class="controls">
-                <button class="btn-prev" id="btn-prev" onclick="prevTopic()">⬅️ Trước</button>
-                <button class="btn-restart" onclick="restartTimer()">🔄 Reset Timer</button>
-                <button class="btn-shuffle hidden" id="btn-shuffle" onclick="shuffleItems()">🔀 Tráo lại</button>
-                <button class="btn-check hidden" id="btn-check" onclick="checkOrder()">✅ Kiểm tra</button>
-                <button class="btn-next" id="btn-next" onclick="nextTopic()">Tiếp ➡️</button>
+                <button class="btn-shuffle" onclick="shuffleItems()">🔀 Tráo lại</button>
+                <button class="btn-check" onclick="checkOrder()">✅ Kiểm tra</button>
             </div>
+            
+            <div id="feedback"></div>
         </div>
         
         <div class="stats">
-            <div class="stat-item">
-                <span class="stat-value" id="current-topic">1</span>
-                <span class="stat-label">Topic hiện tại</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value">18</span>
-                <span class="stat-label">Tổng Topics</span>
-            </div>
-            <div class="stat-item">
+            <div class="stat-box">
                 <span class="stat-value" id="attempts">0</span>
                 <span class="stat-label">Số lần thử</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-value" id="time-spent">0</span>
-                <span class="stat-label">Phút đã học</span>
+            <div class="stat-box">
+                <span class="stat-value" id="correct-count">0</span>
+                <span class="stat-label">Đã hoàn thành</span>
             </div>
         </div>
     </div>
@@ -713,41 +629,16 @@
         ];
 
         let currentIndex = 0;
-        let currentMode = 'study';
         let shuffledItems = [];
         let correctOrder = [];
         let attempts = 0;
-        let timeLeft = 4 * 60 * 60;
-        let timerInterval;
-        let startTime = Date.now();
+        let correctCount = 0;
         let draggedElement = null;
 
-        function switchMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (mode === 'study') {
-                document.getElementById('study-mode').classList.remove('hidden');
-                document.getElementById('practice-mode').classList.add('hidden');
-                document.getElementById('btn-shuffle').classList.add('hidden');
-                document.getElementById('btn-check').classList.add('hidden');
-                document.getElementById('btn-next').classList.remove('hidden');
-                document.getElementById('btn-prev').classList.remove('hidden');
-            } else {
-                document.getElementById('study-mode').classList.add('hidden');
-                document.getElementById('practice-mode').classList.remove('hidden');
-                document.getElementById('btn-shuffle').classList.remove('hidden');
-                document.getElementById('btn-check').classList.remove('hidden');
-                document.getElementById('btn-next').classList.add('hidden');
-                document.getElementById('btn-prev').classList.add('hidden');
-                shuffleItems();
-            }
-        }
-
-        function displayTopic() {
+        function loadTopic() {
             const topic = topics[currentIndex];
             document.getElementById('topic-name').textContent = topic.name;
+            document.getElementById('current-topic').textContent = currentIndex + 1;
             
             const tagsList = document.getElementById('tags-list');
             tagsList.innerHTML = '';
@@ -758,54 +649,47 @@
                 tagsList.appendChild(span);
             });
             
-            document.getElementById('tags-meaning').textContent = topic.tagsMeaning;
-            
-            if (currentMode === 'study') {
-                displayStudyMode(topic);
-            } else {
-                displayPracticeMode(topic);
-            }
-            
-            document.getElementById('current-topic').textContent = currentIndex + 1;
-            updateProgress();
-        }
-
-        function displayStudyMode(topic) {
-            const pointsList = document.getElementById('points-list');
-            pointsList.innerHTML = '';
-            
-            topic.points.forEach((point, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span class="point-tag">${index + 1}. ${point.tag}</span>${point.text}<span class="point-meaning">(${point.meaning})</span>`;
-                pointsList.appendChild(li);
-            });
-        }
-
-        function displayPracticeMode(topic) {
             correctOrder = topic.points.map((point, index) => ({
                 ...point,
                 correctIndex: index
             }));
-            shuffleItems();
+            
+            // Tự động tráo ngay khi load topic
+            autoShuffle();
         }
 
-        function shuffleItems() {
-            const topic = topics[currentIndex];
+        function autoShuffle() {
             shuffledItems = [...correctOrder];
             
-            // Fisher-Yates shuffle
+            // Fisher-Yates shuffle - đảm bảo tráo hoàn toàn
             for (let i = shuffledItems.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffledItems[i], shuffledItems[j]] = [shuffledItems[j], shuffledItems[i]];
             }
             
-            renderSortableItems();
-            document.getElementById('feedback').innerHTML = '';
-            attempts = 0;
-            document.getElementById('attempts').textContent = attempts;
+            // Kiểm tra xem có đúng thứ tự ban đầu không, nếu có thì tráo lại
+            let isSameOrder = true;
+            for (let i = 0; i < shuffledItems.length; i++) {
+                if (shuffledItems[i].correctIndex !== i) {
+                    isSameOrder = false;
+                    break;
+                }
+            }
+            
+            // Nếu vẫn giống thứ tự ban đầu, tráo lại
+            if (isSameOrder) {
+                autoShuffle();
+            } else {
+                renderItems();
+                document.getElementById('feedback').innerHTML = '';
+            }
         }
 
-        function renderSortableItems() {
+        function shuffleItems() {
+            autoShuffle();
+        }
+
+        function renderItems() {
             const container = document.getElementById('sortable-container');
             container.innerHTML = '';
             
@@ -819,8 +703,8 @@
                     <span class="drag-handle">☰</span>
                     <span class="item-number">${index + 1}</span>
                     <div class="item-content">
-                        <strong>${item.text}</strong>
-                        <div style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                        <div class="item-text">${item.text}</div>
+                        <div class="item-tags">
                             <span class="point-tag">${item.tag}</span>
                             <span class="point-meaning">(${item.meaning})</span>
                         </div>
@@ -840,7 +724,6 @@
             draggedElement = this;
             this.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
         }
 
         function handleDragOver(e) {
@@ -849,13 +732,14 @@
             }
             e.dataTransfer.dropEffect = 'move';
             
-            const afterElement = getDragAfterElement(e.currentTarget.parentElement, e.clientY);
+            const container = document.getElementById('sortable-container');
+            const afterElement = getDragAfterElement(container, e.clientY);
             const dragging = document.querySelector('.dragging');
             
             if (afterElement == null) {
-                e.currentTarget.parentElement.appendChild(dragging);
+                container.appendChild(dragging);
             } else {
-                e.currentTarget.parentElement.insertBefore(dragging, afterElement);
+                container.insertBefore(dragging, afterElement);
             }
             
             return false;
@@ -866,22 +750,25 @@
                 e.stopPropagation();
             }
             
-            if (draggedElement !== this) {
-                const allItems = Array.from(document.querySelectorAll('.sortable-item'));
-                const draggedIndex = allItems.indexOf(draggedElement);
-                const droppedIndex = allItems.indexOf(this);
-                
-                const temp = shuffledItems[draggedIndex];
-                shuffledItems[draggedIndex] = shuffledItems[droppedIndex];
-                shuffledItems[droppedIndex] = temp;
-            }
+            const allItems = Array.from(document.querySelectorAll('.sortable-item'));
+            const newOrder = allItems.map(item => {
+                const index = parseInt(item.dataset.index);
+                return shuffledItems[index];
+            });
+            
+            shuffledItems = newOrder;
             
             return false;
         }
 
         function handleDragEnd(e) {
             this.classList.remove('dragging');
-            renderSortableItems();
+            
+            const allItems = Array.from(document.querySelectorAll('.sortable-item'));
+            allItems.forEach((item, newIndex) => {
+                item.dataset.index = newIndex;
+                item.querySelector('.item-number').textContent = newIndex + 1;
+            });
         }
 
         function getDragAfterElement(container, y) {
@@ -918,7 +805,8 @@
                     wrongPositions.push({
                         current: index + 1,
                         correct: shuffledItems[index].correctIndex + 1,
-                        text: shuffledItems[index].text
+                        text: shuffledItems[index].text,
+                        tag: shuffledItems[index].tag
                     });
                 }
             });
@@ -926,116 +814,52 @@
             const feedback = document.getElementById('feedback');
             
             if (isCorrect) {
+                correctCount++;
+                document.getElementById('correct-count').textContent = correctCount;
+                
                 feedback.innerHTML = `
                     <div class="feedback success">
-                        🎉 Chính xác! Bạn đã sắp xếp đúng thứ tự sau ${attempts} lần thử!
-                        <div style="margin-top: 15px;">
-                            <button class="btn-next" onclick="nextTopicAfterSuccess()" style="padding: 12px 25px;">
-                                Chuyển sang topic tiếp theo ➡️
-                            </button>
-                        </div>
+                        🎉 Chính xác! Bạn đã sắp xếp đúng sau ${attempts} lần thử!
+                        ${currentIndex < topics.length - 1 ? 
+                            '<button class="btn-next-topic" onclick="nextTopic()">Chuyển sang topic tiếp theo ➡️</button>' :
+                            '<div style="margin-top: 15px;">🏆 Chúc mừng! Bạn đã hoàn thành tất cả 18 topics!</div>'
+                        }
                     </div>
                 `;
             } else {
-                let wrongOrderHTML = '<div class="wrong-order"><div class="wrong-order-title">❌ Các vị trí sai:</div><div class="wrong-order-list">';
+                let wrongOrderHTML = '<div class="wrong-order"><div class="wrong-order-title">❌ Các vị trí chưa đúng:</div>';
                 wrongPositions.forEach(pos => {
-                    wrongOrderHTML += `• Vị trí ${pos.current} → Đáp án đúng phải ở vị trí ${pos.correct}<br>`;
+                    wrongOrderHTML += `<div class="wrong-item">
+                        <strong>${pos.tag}:</strong> Hiện tại ở vị trí ${pos.current}, phải ở vị trí ${pos.correct}
+                    </div>`;
                 });
-                wrongOrderHTML += '</div></div>';
+                wrongOrderHTML += '</div>';
                 
                 feedback.innerHTML = `
                     <div class="feedback error">
-                        ❌ Chưa đúng! Hãy thử lại.
+                        ❌ Chưa đúng! Hãy sắp xếp lại.
                         ${wrongOrderHTML}
-                        <div style="margin-top: 15px;">
-                            <button class="btn-shuffle" onclick="shuffleItems()" style="padding: 10px 20px;">
-                                🔀 Tráo lại thứ tự
-                            </button>
-                        </div>
                     </div>
                 `;
+                
+                setTimeout(() => {
+                    items.forEach(item => {
+                        item.classList.remove('correct', 'incorrect');
+                    });
+                }, 2000);
             }
-        }
-
-        function nextTopicAfterSuccess() {
-            if (currentIndex < topics.length - 1) {
-                currentIndex++;
-                displayTopic();
-                attempts = 0;
-                document.getElementById('attempts').textContent = attempts;
-            } else {
-                alert('🎉 Chúc mừng! Bạn đã hoàn thành tất cả 18 topics!');
-            }
-        }
-
-        function updateProgress() {
-            const progress = ((currentIndex + 1) / topics.length) * 100;
-            document.getElementById('progress').style.width = progress + '%';
-            document.getElementById('progress-text').textContent = `${currentIndex + 1}/18`;
         }
 
         function nextTopic() {
             if (currentIndex < topics.length - 1) {
                 currentIndex++;
-                displayTopic();
                 attempts = 0;
                 document.getElementById('attempts').textContent = attempts;
+                loadTopic();
             }
         }
 
-        function prevTopic() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                displayTopic();
-                attempts = 0;
-                document.getElementById('attempts').textContent = attempts;
-            }
-        }
-
-        function updateTimer() {
-            const hours = Math.floor(timeLeft / 3600);
-            const minutes = Math.floor((timeLeft % 3600) / 60);
-            const seconds = timeLeft % 60;
-            
-            document.getElementById('timer').textContent = 
-                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
-            const timeSpent = Math.floor((Date.now() - startTime) / 60000);
-            document.getElementById('time-spent').textContent = timeSpent;
-            
-            if (timeLeft > 0) {
-                timeLeft--;
-            } else {
-                clearInterval(timerInterval);
-                alert('⏰ Hết giờ! Bạn đã học được bao nhiêu topics?');
-            }
-        }
-
-        function restartTimer() {
-            if (confirm('Bạn có chắc muốn reset thời gian?')) {
-                timeLeft = 4 * 60 * 60;
-                startTime = Date.now();
-                clearInterval(timerInterval);
-                timerInterval = setInterval(updateTimer, 1000);
-                updateTimer();
-            }
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (currentMode === 'study') {
-                if (e.key === 'ArrowLeft') prevTopic();
-                if (e.key === 'ArrowRight') nextTopic();
-            }
-            if (e.key === 'Enter' && currentMode === 'practice') {
-                checkOrder();
-            }
-        });
-
-        // Initialize
-        displayTopic();
-        timerInterval = setInterval(updateTimer, 1000);
-        updateTimer();
+        loadTopic();
     </script>
 </body>
 </html>
