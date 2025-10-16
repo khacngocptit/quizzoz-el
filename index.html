@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS Part 4 - Luyện tập sắp xếp</title>
+    <title>IELTS Learning App</title>
     <style>
         * {
             margin: 0;
@@ -19,115 +19,88 @@
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         
         .header {
             text-align: center;
-            color: white;
             margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .progress {
-            background: rgba(255,255,255,0.2);
-            padding: 15px;
-            border-radius: 10px;
-            color: white;
-            text-align: center;
-            font-size: 1.3em;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         
         .topic-title {
-            font-size: 2em;
+            font-size: 32px;
             color: #667eea;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: bold;
+            margin-bottom: 10px;
         }
         
-        .flag-tags-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            color: white;
+        .progress {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
         }
         
-        .flag-tags-box h3 {
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            text-align: center;
-        }
-        
-        .tags-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-        }
-        
-        .tag {
-            background: rgba(255,255,255,0.9);
-            color: #667eea;
-            padding: 10px 18px;
-            border-radius: 25px;
-            font-size: 0.95em;
-            font-weight: bold;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .sortable-container {
-            min-height: 400px;
-            margin-bottom: 25px;
-        }
-        
-        .sortable-item {
-            padding: 18px 20px;
-            margin-bottom: 12px;
+        .flags-section {
             background: #f8f9fa;
-            border-radius: 12px;
-            border-left: 5px solid #6c757d;
-            cursor: move;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
         }
         
-        .sortable-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
+        .flags-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
         
-        .sortable-item.dragging {
-            opacity: 0.5;
-            transform: scale(1.05);
+        .flag-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
         }
         
-        .sortable-item.correct {
-            border-left-color: #28a745;
-            background: #d4edda;
+        .flag-translation {
+            font-size: 12px;
+            opacity: 0.9;
         }
         
-        .sortable-item.incorrect {
-            border-left-color: #dc3545;
-            background: #f8d7da;
+        .drop-zones {
+            margin-bottom: 30px;
+        }
+        
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding: 15px;
+            background: #fafafa;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #667eea;
+            background: #e8eaf6;
+        }
+        
+        .drop-zone.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .drop-zone.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
             animation: shake 0.5s;
         }
         
@@ -137,729 +110,539 @@
             75% { transform: translateX(10px); }
         }
         
-        .drag-handle {
-            font-size: 1.8em;
-            color: #6c757d;
-            cursor: grab;
-            user-select: none;
-        }
-        
-        .drag-handle:active {
-            cursor: grabbing;
-        }
-        
-        .item-number {
-            display: inline-block;
-            min-width: 40px;
-            height: 40px;
-            background: #6c757d;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 40px;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        
-        .item-content {
-            flex-grow: 1;
-        }
-        
-        .item-text {
-            font-size: 1.05em;
-            line-height: 1.5;
+        .drop-zone-label {
+            font-size: 14px;
+            color: #999;
             margin-bottom: 5px;
         }
         
-        .item-tags {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 8px;
+        .draggable-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
         }
         
-        .point-tag {
+        .draggable-item {
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: move;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+        }
+        
+        .draggable-item.placed {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+        
+        .item-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .success-message {
+            text-align: center;
+            padding: 30px;
+            background: #4caf50;
+            color: white;
+            border-radius: 10px;
+            font-size: 24px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .btn-next {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            padding: 15px;
             background: #667eea;
             color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            font-weight: bold;
-        }
-        
-        .point-meaning {
-            color: #6c757d;
-            font-size: 0.9em;
-            font-style: italic;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        button {
-            padding: 15px 35px;
-            font-size: 1.1em;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
+            font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
         }
         
-        .btn-check {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
+        .btn-next:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         
-        .btn-shuffle {
-            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-            color: #000;
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        
-        button:active {
-            transform: translateY(-1px);
-        }
-        
-        .feedback {
-            margin-top: 25px;
-            padding: 25px;
-            border-radius: 15px;
+        .completion-message {
             text-align: center;
-            font-size: 1.2em;
-            font-weight: bold;
+            padding: 50px;
         }
         
-        .feedback.success {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-            border: 3px solid #28a745;
+        .completion-message h2 {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 20px;
         }
         
-        .feedback.error {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            color: #721c24;
-            border: 3px solid #dc3545;
-        }
-        
-        .wrong-order {
-            margin-top: 20px;
-            padding: 20px;
-            background: #fff3cd;
-            border-radius: 12px;
-            border-left: 5px solid #ffc107;
-            text-align: left;
-        }
-        
-        .wrong-order-title {
-            font-weight: bold;
-            color: #856404;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
-        
-        .wrong-item {
-            padding: 10px;
-            margin-bottom: 8px;
-            background: white;
-            border-radius: 8px;
-            color: #856404;
-            font-size: 0.95em;
-        }
-        
-        .btn-next-topic {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin-top: 20px;
-            padding: 15px 40px;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-box {
-            background: rgba(255,255,255,0.2);
-            padding: 15px 30px;
-            border-radius: 12px;
-            color: white;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-        
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            display: block;
-        }
-        
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-        
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .card {
-                padding: 25px;
-            }
-            
-            .topic-title {
-                font-size: 1.5em;
-            }
-            
-            button {
-                padding: 12px 25px;
-                font-size: 1em;
-            }
+        .completion-message p {
+            font-size: 20px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="app">
         <div class="header">
-            <h1>🎯 IELTS Part 4 - Luyện tập sắp xếp</h1>
-            <p>Kéo thả để sắp xếp đúng thứ tự</p>
+            <h1 class="topic-title" id="topicTitle"></h1>
+            <div class="progress" id="progress"></div>
         </div>
         
-        <div class="progress">
-            Topic: <span id="current-topic">1</span> / 18
+        <div class="flags-section" id="flagsSection">
+            <div class="flags-title">Thứ tự đúng các từ khóa:</div>
+            <div id="flagsList"></div>
         </div>
         
-        <div class="card">
-            <h2 class="topic-title" id="topic-name"></h2>
-            
-            <div class="flag-tags-box">
-                <h3>🏷️ Từ khóa quan trọng - Ghi nhớ thứ tự này:</h3>
-                <div class="tags-list" id="tags-list"></div>
-            </div>
-            
-            <div class="sortable-container" id="sortable-container"></div>
-            
-            <div class="controls">
-                <button class="btn-shuffle" onclick="shuffleItems()">🔀 Tráo lại</button>
-                <button class="btn-check" onclick="checkOrder()">✅ Kiểm tra</button>
-            </div>
-            
-            <div id="feedback"></div>
-        </div>
+        <div class="drop-zones" id="dropZones"></div>
         
-        <div class="stats">
-            <div class="stat-box">
-                <span class="stat-value" id="attempts">0</span>
-                <span class="stat-label">Số lần thử</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-value" id="correct-count">0</span>
-                <span class="stat-label">Đã hoàn thành</span>
-            </div>
-        </div>
+        <div class="draggable-items" id="draggableItems"></div>
+        
+        <div id="successArea"></div>
     </div>
 
     <script>
-        const topics = [
+        const topicsData = [
             {
-                name: "Zoo",
-                mainTags: ["SYMBOLS", "OPEN", "INDUSTRY", "FREEDOM", "VALUES", "NEW", "MODERN"],
-                tagsMeaning: "Biểu tượng - Mở cửa - Công nghiệp - Tự do - Giá trị - Mới - Hiện đại",
-                points: [
-                    { text: "Symbols of privilege and wealth", tag: "SYMBOLS", meaning: "Biểu tượng" },
-                    { text: "Open the door for everyone", tag: "OPEN", meaning: "Mở cửa" },
-                    { text: "Away from amusement towards industry", tag: "INDUSTRY", meaning: "Công nghiệp" },
-                    { text: "Away from the enclosure towards greater freedom", tag: "FREEDOM", meaning: "Tự do" },
-                    { text: "A different set of values", tag: "VALUES", meaning: "Giá trị" },
-                    { text: "A new mission of conversation", tag: "NEW", meaning: "Mới" },
-                    { text: "A Modern zoo alternative", tag: "MODERN", meaning: "Hiện đại" }
+                topic: "Digital Transformation",
+                items: [
+                    { flag: "REDEFINING", translation: "Định nghĩa lại", content: "Redefining business models with technology" },
+                    { flag: "ENHANCING", translation: "Nâng cao", content: "Enhancing productivity through automation" },
+                    { flag: "PROMOTING", translation: "Thúc đẩy", content: "Promoting digital skills training" },
+                    { flag: "OVER-RELIANCE", translation: "Phụ thuộc quá mức", content: "Over-reliance on automated systems" },
+                    { flag: "CONCERNS", translation: "Mối lo ngại", content: "Concerns about cybersecurity risks" },
+                    { flag: "BUILDING", translation: "Xây dựng", content: "Building inclusive digital ecosystems" },
+                    { flag: "FOCUSING", translation: "Tập trung", content: "Focusing on ethical technology development" }
                 ]
             },
             {
-                name: "Coffee",
-                mainTags: ["CUSTOM", "COMMUNICATION", "HABIT", "PROBLEMS", "REMEDY", "HEALTH", "ORIGIN"],
-                tagsMeaning: "Phong tục - Giao tiếp - Thói quen - Vấn đề - Giải pháp - Sức khỏe - Nguồn gốc",
-                points: [
-                    { text: "The custom of coffee drinking begins to spread", tag: "CUSTOM", meaning: "Phong tục" },
-                    { text: "Coffee encourages the art of communication", tag: "COMMUNICATION", meaning: "Giao tiếp" },
-                    { text: "A habit that has become a big economy", tag: "HABIT", meaning: "Thói quen" },
-                    { text: "Problems of coffee economy", tag: "PROBLEMS", meaning: "Vấn đề" },
-                    { text: "A remedy of unjust revenue distribution", tag: "REMEDY", meaning: "Giải pháp" },
-                    { text: "The health risks versus health benefits debate", tag: "HEALTH", meaning: "Sức khỏe" },
-                    { text: "The ancient origin of coffee", tag: "ORIGIN", meaning: "Nguồn gốc" }
+                topic: "The Arrival of Four-Day Week",
+                items: [
+                    { flag: "OUT OF DATE", translation: "Lỗi thời", content: "A way of life now out date" },
+                    { flag: "BENEFITS", translation: "Lợi ích", content: "Benefits for employees" },
+                    { flag: "FINANCIAL", translation: "Tài chính", content: "Undesirable financial consequences" },
+                    { flag: "UNFORESEEN", translation: "Không lường trước", content: "Unforeseen challenges for employees" },
+                    { flag: "DIFFICULT", translation: "Khó khăn", content: "Difficult to change old habits" },
+                    { flag: "UNFAIR", translation: "Không công bằng", content: "An Unfair for some people" },
+                    { flag: "ALTERNATIVE", translation: "Giải pháp thay thế", content: "Alternative solutions worth considering" }
                 ]
             },
             {
-                name: "Tulip",
-                mainTags: ["GOLDEN AGE", "COMING", "OBJECT", "TYPES", "MECHANICS", "EUROPE", "UNEXPECTED"],
-                tagsMeaning: "Thời hoàng kim - Đến - Đối tượng - Các loại - Cơ chế - Châu Âu - Bất ngờ",
-                points: [
-                    { text: "The economy during the Golden Age", tag: "GOLDEN AGE", meaning: "Thời hoàng kim" },
-                    { text: "Coming into Fashion", tag: "COMING", meaning: "Đến/Xuất hiện" },
-                    { text: "An object of trade", tag: "OBJECT", meaning: "Đối tượng" },
-                    { text: "Different types of tulip", tag: "TYPES", meaning: "Các loại" },
-                    { text: "Trade mechanics", tag: "MECHANICS", meaning: "Cơ chế" },
-                    { text: "Trade across Europe", tag: "EUROPE", meaning: "Châu Âu" },
-                    { text: "An unexpected turn of events", tag: "UNEXPECTED", meaning: "Bất ngờ" }
+                topic: "Urban Development",
+                items: [
+                    { flag: "REDEFINING", translation: "Định nghĩa lại", content: "Redefining sustainable city planning" },
+                    { flag: "ENCOURAGING", translation: "Khuyến khích", content: "Encouraging green spaces in urban areas" },
+                    { flag: "SUPPORTING", translation: "Hỗ trợ", content: "Supporting affordable housing projects" },
+                    { flag: "OVER-RELIANCE", translation: "Phụ thuộc quá mức", content: "Over-reliance on high-rise buildings" },
+                    { flag: "CONCERNS", translation: "Mối lo ngại", content: "Concerns about traffic congestion" },
+                    { flag: "STRENGTHENING", translation: "Tăng cường", content: "Strengthening community engagement" },
+                    { flag: "FOCUSING", translation: "Tập trung", content: "Focusing on renewable energy source" }
                 ]
             },
             {
-                name: "Eating China",
-                mainTags: ["ORIGINS", "INFLUENCE", "REGIONAL", "METHODS", "STYLE", "CHANGES", "EFFECTS"],
-                tagsMeaning: "Nguồn gốc - Ảnh hưởng - Khu vực - Phương pháp - Phong cách - Thay đổi - Tác động",
-                points: [
-                    { text: "The origins of chinese food", tag: "ORIGINS", meaning: "Nguồn gốc" },
-                    { text: "The influence of philosophy", tag: "INFLUENCE", meaning: "Ảnh hưởng" },
-                    { text: "Regional variations", tag: "REGIONAL", meaning: "Khu vực" },
-                    { text: "Cooking methods", tag: "METHODS", meaning: "Phương pháp" },
-                    { text: "The style of eating", tag: "STYLE", meaning: "Phong cách" },
-                    { text: "Changes in the Chinese diets", tag: "CHANGES", meaning: "Thay đổi" },
-                    { text: "Effects of a changing diet", tag: "EFFECTS", meaning: "Tác động" }
+                topic: "Woman Mathematics",
+                items: [
+                    { flag: "GENDER OBSCURE", translation: "Giới tính bị che khuất", content: "Gender obscure achievements" },
+                    { flag: "ACKNOWLEDGING", translation: "Công nhận", content: "Acknowledging achievement of a pioneer" },
+                    { flag: "MAN UNFAIRLY", translation: "Đàn ông không công bằng", content: "Man unfairly credited" },
+                    { flag: "LONG CAREER", translation: "Sự nghiệp dài", content: "A long career showing exceptional ability" },
+                    { flag: "LABELS", translation: "Nhãn mác", content: "Labels can change perspective on people" },
+                    { flag: "ATTEMPTING", translation: "Cố gắng", content: "Attempting to create a gender balance" },
+                    { flag: "UNIFORMITY", translation: "Sự thống nhất", content: "Uniformity is not always good" }
                 ]
             },
             {
-                name: "Meatless Diet",
-                mainTags: ["TYPES", "VARIOUS", "POSSIBLE", "FARMING", "RESPONSIBILITIES", "HEALTH", "RESPECT"],
-                tagsMeaning: "Các loại - Khác nhau - Có thể - Chăn nuôi - Trách nhiệm - Sức khỏe - Tôn trọng",
-                points: [
-                    { text: "Types of Vegetarian", tag: "TYPES", meaning: "Các loại" },
-                    { text: "Various explanations", tag: "VARIOUS", meaning: "Khác nhau" },
-                    { text: "Possible global food crisis", tag: "POSSIBLE", meaning: "Có thể" },
-                    { text: "Farming Factory", tag: "FARMING", meaning: "Chăn nuôi" },
-                    { text: "Our responsibilities for global", tag: "RESPONSIBILITIES", meaning: "Trách nhiệm" },
-                    { text: "Health gets better with diet", tag: "HEALTH", meaning: "Sức khỏe" },
-                    { text: "Respect the life", tag: "RESPECT", meaning: "Tôn trọng" }
+                topic: "Hotel",
+                items: [
+                    { flag: "FINANCIAL", translation: "Tài chính", content: "A sensible Financial Choice" },
+                    { flag: "HIGH", translation: "Cao", content: "The price of convenience may be high" },
+                    { flag: "ADVANTAGES", translation: "Ưu điểm", content: "The importance of planning in Advantages" },
+                    { flag: "IMPACT", translation: "Tác động", content: "The impact of Lack of freedom" },
+                    { flag: "LESS", translation: "Ít hơn", content: "The benefits of living with Less" },
+                    { flag: "CHALLENGES", translation: "Thách thức", content: "The Challenges that Come with a New Perspective" },
+                    { flag: "COMPETITIVE", translation: "Cạnh tranh", content: "A competitive Business" }
                 ]
             },
             {
-                name: "Charles Dickens",
-                mainTags: ["DICKENS", "DIFFICULTIES", "KEEPING", "INFLUENCE", "SUCCESS", "PROTECT", "BRING"],
-                tagsMeaning: "Dickens - Khó khăn - Giữ - Ảnh hưởng - Thành công - Bảo vệ - Mang",
-                points: [
-                    { text: "Dickens for our time", tag: "DICKENS", meaning: "Dickens" },
-                    { text: "Difficulties for modern readers", tag: "DIFFICULTIES", meaning: "Khó khăn" },
-                    { text: "Keeping the readers guessing", tag: "KEEPING", meaning: "Giữ" },
-                    { text: "The influence of media", tag: "INFLUENCE", meaning: "Ảnh hưởng" },
-                    { text: "Dickens's early success", tag: "SUCCESS", meaning: "Thành công" },
-                    { text: "Trying to protect his property", tag: "PROTECT", meaning: "Bảo vệ" },
-                    { text: "Bring the books to life", tag: "BRING", meaning: "Mang" }
+                topic: "Mountain",
+                items: [
+                    { flag: "CHANGING", translation: "Thay đổi", content: "Our changing definition of mountains" },
+                    { flag: "SENSE", translation: "Ý thức", content: "A sense of achievement" },
+                    { flag: "PUBLICISING", translation: "Công khai", content: "Publicising one's achievements" },
+                    { flag: "DISTURBING", translation: "Đáng lo ngại", content: "A disturbing revelation" },
+                    { flag: "WRONG PRIORITY", translation: "Ưu tiên sai", content: "The wrong priority" },
+                    { flag: "FOCUS", translation: "Tập trung", content: "A focus on substantiality" },
+                    { flag: "INTIMATE", translation: "Thân mật", content: "A more intimate relationship" }
                 ]
             },
             {
-                name: "Early Australia",
-                mainTags: ["NEW", "NATURAL", "TECHNOLOGY", "JOURNEY", "NO", "LACK", "DETERMINATION"],
-                tagsMeaning: "Mới - Tự nhiên - Công nghệ - Hành trình - Không - Thiếu - Quyết tâm",
-                points: [
-                    { text: "New evidence to speculation", tag: "NEW", meaning: "Mới" },
-                    { text: "Natural barrier to resettlement", tag: "NATURAL", meaning: "Tự nhiên" },
-                    { text: "Technology helps uncover the ocean's secret", tag: "TECHNOLOGY", meaning: "Công nghệ" },
-                    { text: "A Journey made by stages", tag: "JOURNEY", meaning: "Hành trình" },
-                    { text: "No precise figures available", tag: "NO", meaning: "Không" },
-                    { text: "Lack of knowledge and skills", tag: "LACK", meaning: "Thiếu" },
-                    { text: "Determination of the explorers through the ages", tag: "DETERMINATION", meaning: "Quyết tâm" }
+                topic: "Consumer Age",
+                items: [
+                    { flag: "MAKING", translation: "Làm cho", content: "Making things last Longer" },
+                    { flag: "EXPERIMENT", translation: "Thử nghiệm", content: "A temporary Experiment" },
+                    { flag: "SECRECY", translation: "Bí mật", content: "The reason of Secrecy" },
+                    { flag: "OUR TIMES", translation: "Thời đại chúng ta", content: "Still relevant to our times" },
+                    { flag: "DIFFICULTY", translation: "Khó khăn", content: "The difficulty of being generous" },
+                    { flag: "COMPROMISE", translation: "Thỏa hiệp", content: "Reason to reach a compromise" },
+                    { flag: "LESSONS", translation: "Bài học", content: "Important lessons for all of us" }
                 ]
             },
             {
-                name: "Frozen Land",
-                mainTags: ["WHO", "FIRST", "END", "HIDDEN", "RACE", "LESS", "COLD"],
-                tagsMeaning: "Ai - Đầu tiên - Kết thúc - Ẩn - Cuộc đua - Ít - Lạnh",
-                points: [
-                    { text: "Who is charge?", tag: "WHO", meaning: "Ai" },
-                    { text: "First step on the ice", tag: "FIRST", meaning: "Đầu tiên" },
-                    { text: "Where is the end of the Earth", tag: "END", meaning: "Kết thúc" },
-                    { text: "Hidden geography", tag: "HIDDEN", meaning: "Ẩn" },
-                    { text: "Race to the pole", tag: "RACE", meaning: "Cuộc đua" },
-                    { text: "Less effort needed", tag: "LESS", meaning: "Ít hơn" },
-                    { text: "Why is it so cold", tag: "COLD", meaning: "Lạnh" }
+                topic: "Dogget",
+                items: [
+                    { flag: "THE", translation: "Cái", content: "The easiest way to travel" },
+                    { flag: "LUCKY", translation: "May mắn", content: "Result of a lucky escape" },
+                    { flag: "ORIGINS", translation: "Nguồn gốc", content: "Origins of what the winner receives" },
+                    { flag: "A", translation: "Một", content: "A need for change" },
+                    { flag: "EARNING", translation: "Kiếm được", content: "Earning a reputation" },
+                    { flag: "CHAMPIONS", translation: "Nhà vô địch", content: "Generations of champions" },
+                    { flag: "NOT MONEY", translation: "Không phải tiền", content: "Not in it for the money" }
                 ]
             },
             {
-                name: "Children Exercise",
-                mainTags: ["FACTORS", "WORST", "SUCCESS", "EFFECTS", "BEHAVIOR", "DESIGN", "BALANCE"],
-                tagsMeaning: "Yếu tố - Tồi tệ - Thành công - Tác động - Hành vi - Thiết kế - Cân bằng",
-                points: [
-                    { text: "Factors contributing to inactivity", tag: "FACTORS", meaning: "Yếu tố" },
-                    { text: "The situation have the potential of being worst", tag: "WORST", meaning: "Tồi tệ" },
-                    { text: "The success of a simple idea", tag: "SUCCESS", meaning: "Thành công" },
-                    { text: "The wider effects of regular activity", tag: "EFFECTS", meaning: "Tác động" },
-                    { text: "Ways in which the environment can influence behavior", tag: "BEHAVIOR", meaning: "Hành vi" },
-                    { text: "A design for exercise and for study", tag: "DESIGN", meaning: "Thiết kế" },
-                    { text: "Achieving the right balance", tag: "BALANCE", meaning: "Cân bằng" }
+                topic: "Children Exercise",
+                items: [
+                    { flag: "FACTORS", translation: "Các yếu tố", content: "Factors contributing to inactivity" },
+                    { flag: "WORST", translation: "Tồi tệ nhất", content: "The situation have the potential of being worst" },
+                    { flag: "SUCCESS", translation: "Thành công", content: "The success of a simple idea" },
+                    { flag: "EFFECTS", translation: "Tác động", content: "The wider effects of regular activity" },
+                    { flag: "BEHAVIOR", translation: "Hành vi", content: "Ways in which the environment can influence behavior" },
+                    { flag: "STUDY", translation: "Nghiên cứu", content: "A design for exercise and for study" },
+                    { flag: "ACHIEVING", translation: "Đạt được", content: "Achieving the right balance" }
                 ]
             },
             {
-                name: "Music",
-                mainTags: ["PHYSICALLY", "GOOD", "GREAT", "WAY", "CREATIVE", "FEELINGS", "WELL-BEING"],
-                tagsMeaning: "Thể chất - Tốt - Tuyệt vời - Cách - Sáng tạo - Cảm xúc - Hạnh phúc",
-                points: [
-                    { text: "A physically demanding activity", tag: "PHYSICALLY", meaning: "Thể chất" },
-                    { text: "A good way to boost your memory", tag: "GOOD", meaning: "Tốt" },
-                    { text: "A great opportunity to broaden your social circle", tag: "GREAT", meaning: "Tuyệt vời" },
-                    { text: "A way to learn discipline and the importance of routine", tag: "WAY", meaning: "Cách" },
-                    { text: "A creative outlet for expressing emotions", tag: "CREATIVE", meaning: "Sáng tạo" },
-                    { text: "Enhanced sensitivity to other people's feelings", tag: "FEELINGS", meaning: "Cảm xúc" },
-                    { text: "Develop a greater sense of well-being", tag: "WELL-BEING", meaning: "Hạnh phúc" }
+                topic: "Music",
+                items: [
+                    { flag: "PHYSICALLY", translation: "Về thể chất", content: "A physically demanding activity" },
+                    { flag: "GOOD", translation: "Tốt", content: "A good way to boost your memory" },
+                    { flag: "GREAT", translation: "Tuyệt vời", content: "A great opportunity to broaden your social circle" },
+                    { flag: "WAY", translation: "Cách", content: "A way to learn discipline and the importance of routine" },
+                    { flag: "CREATIVE", translation: "Sáng tạo", content: "A creative outlet for expressing emotions" },
+                    { flag: "FEELINGS", translation: "Cảm xúc", content: "Enhanced sensitivity to other people's feelings" },
+                    { flag: "WELL-BEING", translation: "Hạnh phúc", content: "Develop a greater sense of well-being" }
                 ]
             },
             {
-                name: "Consumer Age",
-                mainTags: ["MAKING", "EXPERIMENT", "SECRECY", "RELEVANT", "DIFFICULTY", "COMPROMISE", "LESSONS"],
-                tagsMeaning: "Làm - Thí nghiệm - Bí mật - Liên quan - Khó khăn - Thỏa hiệp - Bài học",
-                points: [
-                    { text: "Making things last Longer", tag: "MAKING", meaning: "Làm" },
-                    { text: "A temporary Experiment", tag: "EXPERIMENT", meaning: "Thí nghiệm" },
-                    { text: "The reason of Secrecy", tag: "SECRECY", meaning: "Bí mật" },
-                    { text: "Still relevant to our times", tag: "RELEVANT", meaning: "Liên quan" },
-                    { text: "The difficulty of being generous", tag: "DIFFICULTY", meaning: "Khó khăn" },
-                    { text: "Reason to reach a compromise", tag: "COMPROMISE", meaning: "Thỏa hiệp" },
-                    { text: "Important lessons for all of us", tag: "LESSONS", meaning: "Bài học" }
+                topic: "Early Australia",
+                items: [
+                    { flag: "NEW", translation: "Mới", content: "New evidence to speculation" },
+                    { flag: "NATURAL", translation: "Tự nhiên", content: "Natural barrier to resettlement" },
+                    { flag: "TECHNOLOGY", translation: "Công nghệ", content: "Technology helps uncover the ocean's secret" },
+                    { flag: "A", translation: "Một", content: "A Journey made by stages" },
+                    { flag: "NO", translation: "Không", content: "No precise figures available" },
+                    { flag: "LACK", translation: "Thiếu", content: "Lack of knowledge and skills" },
+                    { flag: "DETERMINATION", translation: "Quyết tâm", content: "Determination of the explorers through the ages" }
                 ]
             },
             {
-                name: "Dogget",
-                mainTags: ["EASIEST", "LUCKY", "ORIGINS", "CHANGE", "REPUTATION", "CHAMPIONS", "MONEY"],
-                tagsMeaning: "Dễ nhất - May mắn - Nguồn gốc - Thay đổi - Danh tiếng - Nhà vô địch - Tiền",
-                points: [
-                    { text: "The easiest way to travel", tag: "EASIEST", meaning: "Dễ nhất" },
-                    { text: "Result of a lucky escape", tag: "LUCKY", meaning: "May mắn" },
-                    { text: "Origins of what the winner receives", tag: "ORIGINS", meaning: "Nguồn gốc" },
-                    { text: "A need for change", tag: "CHANGE", meaning: "Thay đổi" },
-                    { text: "Earning a reputation", tag: "REPUTATION", meaning: "Danh tiếng" },
-                    { text: "Generations of champions", tag: "CHAMPIONS", meaning: "Nhà vô địch" },
-                    { text: "Not in it for the money", tag: "MONEY", meaning: "Tiền" }
+                topic: "Frozen Land",
+                items: [
+                    { flag: "WHO", translation: "Ai", content: "Who is charge?" },
+                    { flag: "FIRST", translation: "Đầu tiên", content: "First step on the ice" },
+                    { flag: "END", translation: "Kết thúc", content: "Where is the end of the Earth" },
+                    { flag: "HIDDEN", translation: "Ẩn giấu", content: "Hidden geography" },
+                    { flag: "RACE", translation: "Cuộc đua", content: "Race to the pole" },
+                    { flag: "LESS", translation: "Ít hơn", content: "Less effort needed" },
+                    { flag: "COLD", translation: "Lạnh", content: "Why is it so cold" }
                 ]
             },
             {
-                name: "Hotel",
-                mainTags: ["FINANCIAL", "HIGH", "ADVANTAGES", "IMPACT", "LESS", "CHALLENGES", "COMPETITIVE"],
-                tagsMeaning: "Tài chính - Cao - Lợi thế - Tác động - Ít - Thách thức - Cạnh tranh",
-                points: [
-                    { text: "A sensible Financial Choice", tag: "FINANCIAL", meaning: "Tài chính" },
-                    { text: "The price of convenience may be high", tag: "HIGH", meaning: "Cao" },
-                    { text: "The importance of planning in Advantages", tag: "ADVANTAGES", meaning: "Lợi thế" },
-                    { text: "The impact of Lack of freedom", tag: "IMPACT", meaning: "Tác động" },
-                    { text: "The benefits of living with Less", tag: "LESS", meaning: "Ít hơn" },
-                    { text: "The Challenges that Come with a New Perspective", tag: "CHALLENGES", meaning: "Thách thức" },
-                    { text: "A competitive Business", tag: "COMPETITIVE", meaning: "Cạnh tranh" }
+                topic: "Meatless Diet",
+                items: [
+                    { flag: "TYPES", translation: "Các loại", content: "Types of Vegetarian" },
+                    { flag: "VARIOUS", translation: "Đa dạng", content: "Various explanations" },
+                    { flag: "POSSIBLE", translation: "Có thể", content: "Possible global food crisis" },
+                    { flag: "FACTORY", translation: "Nhà máy", content: "Farming Factory" },
+                    { flag: "RESPONSIBILITIES", translation: "Trách nhiệm", content: "Our responsibilities for global" },
+                    { flag: "HEALTH", translation: "Sức khỏe", content: "Health gets better with diet (Health benefits)" },
+                    { flag: "LIFE", translation: "Sự sống", content: "Respect the life" }
                 ]
             },
             {
-                name: "Mountain",
-                mainTags: ["CHANGING", "ACHIEVEMENT", "PUBLICISING", "DISTURBING", "WRONG", "FOCUS", "INTIMATE"],
-                tagsMeaning: "Thay đổi - Thành tích - Công bố - Đáng lo - Sai - Tập trung - Thân mật",
-                points: [
-                    { text: "Our changing definition of mountains", tag: "CHANGING", meaning: "Thay đổi" },
-                    { text: "A sense of achievement", tag: "ACHIEVEMENT", meaning: "Thành tích" },
-                    { text: "Publicising one's achievements", tag: "PUBLICISING", meaning: "Công bố" },
-                    { text: "A disturbing revelation", tag: "DISTURBING", meaning: "Đáng lo" },
-                    { text: "The wrong priority", tag: "WRONG", meaning: "Sai" },
-                    { text: "A focus on substantiality", tag: "FOCUS", meaning: "Tập trung" },
-                    { text: "A more intimate relationship", tag: "INTIMATE", meaning: "Thân mật" }
+                topic: "Charles Dickens",
+                items: [
+                    { flag: "DICKENS", translation: "Dickens", content: "Dickens for our time" },
+                    { flag: "DIFFICULTIES", translation: "Khó khăn", content: "Difficulties for modern readers" },
+                    { flag: "KEEPING", translation: "Giữ chân", content: "Keeping the readers guessing" },
+                    { flag: "INFLUENCE", translation: "Ảnh hưởng", content: "The influence of media" },
+                    { flag: "SUCCESS", translation: "Thành công", content: "Dickens's early success" },
+                    { flag: "PROTECT", translation: "Bảo vệ", content: "Trying to protect his property" },
+                    { flag: "BRING", translation: "Mang lại", content: "Bring the books to life" }
                 ]
             },
             {
-                name: "The Arrival of Four-day Week",
-                mainTags: ["OUT DATE", "BENEFITS", "FINANCIAL", "UNFORESEEN", "DIFFICULT", "UNFAIR", "ALTERNATIVE"],
-                tagsMeaning: "Lỗi thời - Lợi ích - Tài chính - Không lường - Khó - Bất công - Thay thế",
-                points: [
-                    { text: "A way of life now out date", tag: "OUT DATE", meaning: "Lỗi thời" },
-                    { text: "Benefits for employees", tag: "BENEFITS", meaning: "Lợi ích" },
-                    { text: "Undesirable financial consequences", tag: "FINANCIAL", meaning: "Tài chính" },
-                    { text: "Unforeseen challenges for employees", tag: "UNFORESEEN", meaning: "Không lường trước" },
-                    { text: "Difficult to change old habits", tag: "DIFFICULT", meaning: "Khó" },
-                    { text: "An Unfair for some people", tag: "UNFAIR", meaning: "Bất công" },
-                    { text: "Alternative solutions worth considering", tag: "ALTERNATIVE", meaning: "Thay thế" }
+                topic: "Tulip",
+                items: [
+                    { flag: "GOLDEN AGE", translation: "Thời kỳ hoàng kim", content: "The economy during the Golden Age" },
+                    { flag: "COMING", translation: "Đến", content: "Coming into Fashion" },
+                    { flag: "AN", translation: "Một", content: "An object of trade" },
+                    { flag: "TULIP", translation: "Hoa tulip", content: "Different types of tulip" },
+                    { flag: "MECHANICS", translation: "Cơ chế", content: "Trade mechanics" },
+                    { flag: "EUROPE", translation: "Châu Âu", content: "Trade across Europe" },
+                    { flag: "UNEXPECTED", translation: "Bất ngờ", content: "An unexpected turn of events" }
                 ]
             },
             {
-                name: "Urban Development",
-                mainTags: ["REDEFINING", "ENCOURAGING", "SUPPORTING", "OVER-RELIANCE", "CONCERNS", "STRENGTHENING", "FOCUSING"],
-                tagsMeaning: "Định nghĩa lại - Khuyến khích - Hỗ trợ - Phụ thuộc quá - Mối lo - Tăng cường - Tập trung",
-                points: [
-                    { text: "Redefining sustainable city planning", tag: "REDEFINING", meaning: "Định nghĩa lại" },
-                    { text: "Encouraging green spaces in urban areas", tag: "ENCOURAGING", meaning: "Khuyến khích" },
-                    { text: "Supporting affordable housing projects", tag: "SUPPORTING", meaning: "Hỗ trợ" },
-                    { text: "Over-reliance on high-rise buildings", tag: "OVER-RELIANCE", meaning: "Phụ thuộc quá mức" },
-                    { text: "Concerns about traffic congestion", tag: "CONCERNS", meaning: "Mối lo ngại" },
-                    { text: "Strengthening community engagement", tag: "STRENGTHENING", meaning: "Tăng cường" },
-                    { text: "Focusing on renewable energy source", tag: "FOCUSING", meaning: "Tập trung" }
+                topic: "Eating China",
+                items: [
+                    { flag: "CHINESE FOOD", translation: "Ẩm thực Trung Quốc", content: "The origins of chinese food" },
+                    { flag: "INFLUENCE", translation: "Ảnh hưởng", content: "The influence of philosophy" },
+                    { flag: "REGIONAL", translation: "Khu vực", content: "Regional variations" },
+                    { flag: "METHODS", translation: "Phương pháp", content: "Cooking methods" },
+                    { flag: "STYLE", translation: "Phong cách", content: "The style of eating" },
+                    { flag: "CHANGES", translation: "Thay đổi", content: "Changes in the Chinese diets" },
+                    { flag: "EFFECTS", translation: "Tác động", content: "Effects of a changing diet" }
                 ]
             },
             {
-                name: "Woman Mathematics",
-                mainTags: ["GENDER", "ACKNOWLEDGING", "MAN", "LONG", "LABELS", "ATTEMPTING", "UNIFORMITY"],
-                tagsMeaning: "Giới tính - Thừa nhận - Nam - Dài - Nhãn - Cố gắng - Đồng nhất",
-                points: [
-                    { text: "Gender obscure achievements", tag: "GENDER", meaning: "Giới tính" },
-                    { text: "Acknowledging achievement of a pioneer", tag: "ACKNOWLEDGING", meaning: "Thừa nhận" },
-                    { text: "Man unfairly credited", tag: "MAN", meaning: "Nam giới" },
-                    { text: "A long career showing exceptional ability", tag: "LONG", meaning: "Dài" },
-                    { text: "Labels can change perspective on people", tag: "LABELS", meaning: "Nhãn mác" },
-                    { text: "Attempting to create a gender balance", tag: "ATTEMPTING", meaning: "Cố gắng" },
-                    { text: "Uniformity is not always good", tag: "UNIFORMITY", meaning: "Đồng nhất" }
+                topic: "Zoo",
+                items: [
+                    { flag: "SYMBOLS", translation: "Biểu tượng", content: "Symbols of privilege and wealth" },
+                    { flag: "OPEN THE DOOR", translation: "Mở cửa", content: "Open the door for everyone" },
+                    { flag: "INDUSTRY", translation: "Ngành công nghiệp", content: "Away from amusement towards industry" },
+                    { flag: "FREEDOM", translation: "Tự do", content: "Away from the enclosure towards greater freedom" },
+                    { flag: "VALUES", translation: "Giá trị", content: "A different set of values" },
+                    { flag: "NEW", translation: "Mới", content: "A new mission of conversation" },
+                    { flag: "MODERN", translation: "Hiện đại", content: "A Modern zoo alternative" }
                 ]
             },
             {
-                name: "Digital Transformation",
-                mainTags: ["REDEFINING", "ENHANCING", "PROMOTING", "OVER-RELIANCE", "CONCERNS", "BUILDING", "FOCUSING"],
-                tagsMeaning: "Định nghĩa lại - Nâng cao - Thúc đẩy - Phụ thuộc quá - Mối lo - Xây dựng - Tập trung",
-                points: [
-                    { text: "Redefining business models with technology", tag: "REDEFINING", meaning: "Định nghĩa lại" },
-                    { text: "Enhancing productivity through automation", tag: "ENHANCING", meaning: "Nâng cao" },
-                    { text: "Promoting digital skills training", tag: "PROMOTING", meaning: "Thúc đẩy" },
-                    { text: "Over-reliance on automated systems", tag: "OVER-RELIANCE", meaning: "Phụ thuộc quá mức" },
-                    { text: "Concerns about cybersecurity risks", tag: "CONCERNS", meaning: "Mối lo ngại" },
-                    { text: "Building inclusive digital ecosystems", tag: "BUILDING", meaning: "Xây dựng" },
-                    { text: "Focusing on ethical technology deployment", tag: "FOCUSING", meaning: "Tập trung" }
+                topic: "Coffee",
+                items: [
+                    { flag: "CUSTOM", translation: "Tập tục", content: "The custom of coffee drinking begins to spread" },
+                    { flag: "COFFEE", translation: "Cà phê", content: "Coffee encourages the art of communication" },
+                    { flag: "HABIT", translation: "Thói quen", content: "A habit that has become a big economy" },
+                    { flag: "PROBLEMS", translation: "Vấn đề", content: "Problems of coffee economy" },
+                    { flag: "REVENUE", translation: "Doanh thu", content: "A remedy of unjust revenue distribution" },
+                    { flag: "HEALTH", translation: "Sức khỏe", content: "The health risks versus health benefits debate" },
+                    { flag: "ORIGIN", translation: "Nguồn gốc", content: "The ancient origin of coffee" }
                 ]
             }
         ];
 
-        let currentIndex = 0;
-        let shuffledItems = [];
-        let correctOrder = [];
-        let attempts = 0;
-        let correctCount = 0;
+        let currentTopicIndex = 0;
+        let userAnswers = [];
         let draggedElement = null;
 
-        function loadTopic() {
-            const topic = topics[currentIndex];
-            document.getElementById('topic-name').textContent = topic.name;
-            document.getElementById('current-topic').textContent = currentIndex + 1;
-            
-            const tagsList = document.getElementById('tags-list');
-            tagsList.innerHTML = '';
-            topic.mainTags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'tag';
-                span.textContent = tag;
-                tagsList.appendChild(span);
-            });
-            
-            correctOrder = topic.points.map((point, index) => ({
-                ...point,
-                correctIndex: index
-            }));
-            
-            // Tự động tráo ngay khi load topic
-            autoShuffle();
-        }
-
-        function autoShuffle() {
-            shuffledItems = [...correctOrder];
-            
-            // Fisher-Yates shuffle - đảm bảo tráo hoàn toàn
-            for (let i = shuffledItems.length - 1; i > 0; i--) {
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [shuffledItems[i], shuffledItems[j]] = [shuffledItems[j], shuffledItems[i]];
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-            
-            // Kiểm tra xem có đúng thứ tự ban đầu không, nếu có thì tráo lại
-            let isSameOrder = true;
-            for (let i = 0; i < shuffledItems.length; i++) {
-                if (shuffledItems[i].correctIndex !== i) {
-                    isSameOrder = false;
-                    break;
-                }
+            return arr;
+        }
+
+        function initTopic() {
+            if (currentTopicIndex >= topicsData.length) {
+                showCompletion();
+                return;
             }
+
+            const topic = topicsData[currentTopicIndex];
+            userAnswers = new Array(7).fill(null);
             
-            // Nếu vẫn giống thứ tự ban đầu, tráo lại
-            if (isSameOrder) {
-                autoShuffle();
-            } else {
-                renderItems();
-                document.getElementById('feedback').innerHTML = '';
-            }
+            document.getElementById('topicTitle').textContent = topic.topic;
+            document.getElementById('progress').textContent = `Topic ${currentTopicIndex + 1} / ${topicsData.length}`;
+            
+            // Display flags
+            const flagsList = document.getElementById('flagsList');
+            flagsList.innerHTML = topic.items.map((item, index) => 
+                `<div class="flag-item">
+                    ${index + 1}. ${item.flag}
+                    <div class="flag-translation">(${item.translation})</div>
+                </div>`
+            ).join('');
+            
+            // Create drop zones
+            const dropZones = document.getElementById('dropZones');
+            dropZones.innerHTML = topic.items.map((item, index) => 
+                `<div class="drop-zone" data-index="${index}">
+                    <div class="drop-zone-label">${index + 1}. ${item.flag} (${item.translation})</div>
+                </div>`
+            ).join('');
+            
+            // Create draggable items (shuffled)
+            const shuffledItems = shuffle(topic.items.map((item, index) => ({...item, originalIndex: index})));
+            const draggableItems = document.getElementById('draggableItems');
+            draggableItems.innerHTML = shuffledItems.map((item, index) => 
+                `<div class="draggable-item" draggable="true" data-original-index="${item.originalIndex}" data-id="${index}">
+                    <div class="item-content">${item.content}</div>
+                </div>`
+            ).join('');
+            
+            document.getElementById('successArea').innerHTML = '';
+            
+            setupDragAndDrop();
         }
 
-        function shuffleItems() {
-            autoShuffle();
-        }
-
-        function renderItems() {
-            const container = document.getElementById('sortable-container');
-            container.innerHTML = '';
+        function setupDragAndDrop() {
+            const draggables = document.querySelectorAll('.draggable-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
             
-            shuffledItems.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'sortable-item';
-                div.draggable = true;
-                div.dataset.index = index;
-                
-                div.innerHTML = `
-                    <span class="drag-handle">☰</span>
-                    <span class="item-number">${index + 1}</span>
-                    <div class="item-content">
-                        <div class="item-text">${item.text}</div>
-                        <div class="item-tags">
-                            <span class="point-tag">${item.tag}</span>
-                            <span class="point-meaning">(${item.meaning})</span>
-                        </div>
-                    </div>
-                `;
-                
-                div.addEventListener('dragstart', handleDragStart);
-                div.addEventListener('dragover', handleDragOver);
-                div.addEventListener('drop', handleDrop);
-                div.addEventListener('dragend', handleDragEnd);
-                
-                container.appendChild(div);
-            });
-        }
-
-        function handleDragStart(e) {
-            draggedElement = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-            e.dataTransfer.dropEffect = 'move';
-            
-            const container = document.getElementById('sortable-container');
-            const afterElement = getDragAfterElement(container, e.clientY);
-            const dragging = document.querySelector('.dragging');
-            
-            if (afterElement == null) {
-                container.appendChild(dragging);
-            } else {
-                container.insertBefore(dragging, afterElement);
-            }
-            
-            return false;
-        }
-
-        function handleDrop(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-            
-            const allItems = Array.from(document.querySelectorAll('.sortable-item'));
-            const newOrder = allItems.map(item => {
-                const index = parseInt(item.dataset.index);
-                return shuffledItems[index];
-            });
-            
-            shuffledItems = newOrder;
-            
-            return false;
-        }
-
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            
-            const allItems = Array.from(document.querySelectorAll('.sortable-item'));
-            allItems.forEach((item, newIndex) => {
-                item.dataset.index = newIndex;
-                item.querySelector('.item-number').textContent = newIndex + 1;
-            });
-        }
-
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.sortable-item:not(.dragging)')];
-            
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        function checkOrder() {
-            attempts++;
-            document.getElementById('attempts').textContent = attempts;
-            
-            let isCorrect = true;
-            let wrongPositions = [];
-            
-            const items = document.querySelectorAll('.sortable-item');
-            items.forEach((item, index) => {
-                item.classList.remove('correct', 'incorrect');
-                
-                if (shuffledItems[index].correctIndex === index) {
-                    item.classList.add('correct');
-                } else {
-                    item.classList.add('incorrect');
-                    isCorrect = false;
-                    wrongPositions.push({
-                        current: index + 1,
-                        correct: shuffledItems[index].correctIndex + 1,
-                        text: shuffledItems[index].text,
-                        tag: shuffledItems[index].tag
-                    });
-                }
-            });
-            
-            const feedback = document.getElementById('feedback');
-            
-            if (isCorrect) {
-                correctCount++;
-                document.getElementById('correct-count').textContent = correctCount;
-                
-                feedback.innerHTML = `
-                    <div class="feedback success">
-                        🎉 Chính xác! Bạn đã sắp xếp đúng sau ${attempts} lần thử!
-                        ${currentIndex < topics.length - 1 ? 
-                            '<button class="btn-next-topic" onclick="nextTopic()">Chuyển sang topic tiếp theo ➡️</button>' :
-                            '<div style="margin-top: 15px;">🏆 Chúc mừng! Bạn đã hoàn thành tất cả 18 topics!</div>'
-                        }
-                    </div>
-                `;
-            } else {
-                let wrongOrderHTML = '<div class="wrong-order"><div class="wrong-order-title">❌ Các vị trí chưa đúng:</div>';
-                wrongPositions.forEach(pos => {
-                    wrongOrderHTML += `<div class="wrong-item">
-                        <strong>${pos.tag}:</strong> Hiện tại ở vị trí ${pos.current}, phải ở vị trí ${pos.correct}
-                    </div>`;
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
+                    draggedElement = draggable;
+                    draggable.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
                 });
-                wrongOrderHTML += '</div>';
                 
-                feedback.innerHTML = `
-                    <div class="feedback error">
-                        ❌ Chưa đúng! Hãy sắp xếp lại.
-                        ${wrongOrderHTML}
-                    </div>
-                `;
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
                 
-                setTimeout(() => {
-                    items.forEach(item => {
-                        item.classList.remove('correct', 'incorrect');
-                    });
-                }, 2000);
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    
+                    if (draggedElement) {
+                        const zoneIndex = parseInt(zone.dataset.index);
+                        const itemOriginalIndex = parseInt(draggedElement.dataset.originalIndex);
+                        
+                        // Remove from previous position if exists
+                        const prevIndex = userAnswers.indexOf(itemOriginalIndex);
+                        if (prevIndex !== -1) {
+                            const prevZone = document.querySelector(`.drop-zone[data-index="${prevIndex}"]`);
+                            const prevItem = prevZone.querySelector('.draggable-item');
+                            if (prevItem) {
+                                document.getElementById('draggableItems').appendChild(prevItem);
+                                prevItem.classList.remove('placed');
+                            }
+                            userAnswers[prevIndex] = null;
+                        }
+                        
+                        // Remove existing item in this zone
+                        const existingItem = zone.querySelector('.draggable-item');
+                        if (existingItem) {
+                            const existingOriginalIndex = parseInt(existingItem.dataset.originalIndex);
+                            userAnswers[zoneIndex] = null;
+                            document.getElementById('draggableItems').appendChild(existingItem);
+                            existingItem.classList.remove('placed');
+                        }
+                        
+                        // Place new item
+                        zone.appendChild(draggedElement);
+                        draggedElement.classList.add('placed');
+                        userAnswers[zoneIndex] = itemOriginalIndex;
+                        
+                        checkAnswers();
+                    }
+                });
+            });
+        }
+
+        function checkAnswers() {
+            const allFilled = userAnswers.every(answer => answer !== null);
+            
+            if (allFilled) {
+                const allCorrect = userAnswers.every((answer, index) => answer === index);
+                
+                if (allCorrect) {
+                    showSuccess();
+                } else {
+                    showIncorrect();
+                }
             }
+        }
+
+        function showSuccess() {
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => {
+                zone.classList.add('correct');
+            });
+            
+            document.getElementById('successArea').innerHTML = `
+                <div class="success-message">
+                    🎉 Chúc mừng! Bạn đã hoàn thành đúng!
+                </div>
+                <button class="btn-next" onclick="nextTopic()">Topic tiếp theo →</button>
+            `;
+        }
+
+        function showIncorrect() {
+            const incorrectZones = [];
+            userAnswers.forEach((answer, index) => {
+                const zone = document.querySelector(`.drop-zone[data-index="${index}"]`);
+                if (answer !== index) {
+                    zone.classList.add('incorrect');
+                    incorrectZones.push(zone);
+                } else {
+                    zone.classList.add('correct');
+                }
+            });
+            
+            setTimeout(() => {
+                incorrectZones.forEach(zone => {
+                    zone.classList.remove('incorrect');
+                    const item = zone.querySelector('.draggable-item');
+                    if (item) {
+                        document.getElementById('draggableItems').appendChild(item);
+                        item.classList.remove('placed');
+                    }
+                });
+                
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    zone.classList.remove('correct', 'incorrect');
+                });
+                
+                userAnswers = new Array(7).fill(null);
+            }, 3000);
         }
 
         function nextTopic() {
-            if (currentIndex < topics.length - 1) {
-                currentIndex++;
-                attempts = 0;
-                document.getElementById('attempts').textContent = attempts;
-                loadTopic();
-            }
+            currentTopicIndex++;
+            initTopic();
         }
 
-        loadTopic();
+        function showCompletion() {
+            document.getElementById('app').innerHTML = `
+                <div class="completion-message">
+                    <h2>🎊 Xuất sắc!</h2>
+                    <p>Bạn đã hoàn thành tất cả ${topicsData.length} topics!</p>
+                    <button class="btn-next" onclick="location.reload()">Học lại từ đầu</button>
+                </div>
+            `;
+        }
+
+        // Initialize first topic
+        initTopic();
     </script>
 </body>
 </html>
